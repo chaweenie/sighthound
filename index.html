@@ -3,111 +3,312 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SiteHound Contracting</title>
+  <title>[Your Company Name] | General Contractor</title>
+  <meta name="description" content="[Your Company Name] — licensed general contractor serving [Your Service Area]. Remodels, additions, and new builds done right.">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="site-header">
-    <div class="brand">
-      <p class="eyebrow">SiteHound Contracting</p>
-      <h1 class="site-title">Contracting with clarity, craft, and calm.</h1>
-      <p class="tagline">A modern home for contracting services that values durable work, transparent process, and local trust.</p>
+
+  <div id="progressBar" class="progress-bar"></div>
+
+  <header id="siteHeader" class="site-header">
+    <div class="header-inner">
+      <a href="#top" class="brand">
+        <span class="brand-mark">[YC]</span>
+        <span class="brand-name">[Your Company Name]</span>
+      </a>
+
+      <nav class="main-nav" id="mainNav">
+        <a href="#services">Services</a>
+        <a href="#process">Process</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#testimonials">Reviews</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="tel:+15555555555" class="header-phone">(555) 555-5555</a>
+        <a href="#contact" class="btn btn-primary">Get a Free Quote</a>
+        <button id="navToggle" class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     </div>
-    <a class="nav-cta" href="#contentPanel">Request a Quote</a>
   </header>
 
-  <main class="page-content">
+  <main id="top">
+
     <section class="hero">
-      <div class="hero-copy">
-        <h2>Navigate the contracting story in a clean, connected experience.</h2>
-        <p>Explore service details, project planning, and core values through a graph-style interface designed to feel intentional, calm, and easy to use.</p>
-      </div>
-      <div class="stats-grid">
-        <article class="stat-card">
-          <strong>Direct process</strong>
-          <p>Concise steps that make planning and hiring a contractor easier.</p>
-        </article>
-        <article class="stat-card">
-          <strong>Professional focus</strong>
-          <p>Contracting services shaped around quality, communication, and practical results.</p>
-        </article>
-        <article class="stat-card">
-          <strong>Local coverage</strong>
-          <p>Responsive work for nearby neighborhoods, renovations, and small commercial updates.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="graph-section">
-      <div class="section-heading">
-        <div>
-          <h3>Graph Navigation</h3>
-          <p>Tap or click a node to reveal content. The center node acts as home and resets the interface.</p>
-        </div>
-        <button id="openGraph" class="nav-cta">Explore Graph</button>
-      </div>
-
-      <div class="graph-shell" aria-label="Contractor service graph navigation">
-        <svg id="graphSvg" viewBox="0 0 960 760" role="img" aria-hidden="true"></svg>
-        <div id="contentPanel" class="panel" aria-live="polite">
-          <button id="panelClose" class="panel-close" aria-label="Close detail panel">Close</button>
-          <h4 id="panelTitle">Click a node to see details</h4>
-          <p id="panelText">The graph is the primary interface for exploring services, workflow, materials, and project types.</p>
-          <div id="panelImage" class="panel-image" role="img" aria-label="Graph detail placeholder"></div>
-          <div id="panelLinks" class="related-links"></div>
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="hero-inner reveal">
+        <p class="eyebrow">Licensed &amp; Insured General Contractor</p>
+        <h1>Built right. On schedule. No surprises.</h1>
+        <p class="hero-sub">
+          [Your Company Name] handles remodels, additions, and new builds across
+          [Your Service Area] — with clear communication from the first estimate to the final walkthrough.
+        </p>
+        <div class="hero-ctas">
+          <a href="#contact" class="btn btn-primary btn-lg">Request a Free Estimate</a>
+          <a href="tel:+15555555555" class="btn btn-ghost btn-lg">Call (555) 555-5555</a>
         </div>
       </div>
+      <div class="scroll-cue" aria-hidden="true">
+        <span></span>
+        <p>Scroll</p>
+      </div>
     </section>
 
-    <section class="mobile-menu" aria-label="Mobile navigation menu">
-      <p class="menu-label">Menu for smaller screens</p>
-      <div class="menu-group mobile-grid">
-        <article class="mobile-item">
-          <button type="button" data-node="Services">Services</button>
-          <p>Explore contracting capabilities and service options.</p>
+    <section class="trust-bar reveal">
+      <div class="trust-item">
+        <strong class="stat-number" data-count="15">0</strong>
+        <span>Years in Business</span>
+      </div>
+      <div class="trust-item">
+        <strong class="stat-number" data-count="300">0</strong>
+        <span>Projects Completed</span>
+      </div>
+      <div class="trust-item">
+        <strong class="stat-number" data-count="100">0</strong>
+        <span>% Licensed &amp; Insured</span>
+      </div>
+      <div class="trust-item">
+        <strong class="stat-number" data-count="5">0</strong>
+        <span>Star Average Rating</span>
+      </div>
+    </section>
+
+    <section id="services" class="services">
+      <div class="section-heading reveal">
+        <p class="eyebrow">What We Do</p>
+        <h2>Full-service contracting, one point of contact</h2>
+        <p class="section-sub">From a single repair to a ground-up build, [Your Company Name] manages the whole project so you don't have to juggle subcontractors.</p>
+      </div>
+
+      <div class="services-grid">
+        <article class="service-card reveal">
+          <div class="service-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48"><path d="M24 4 44 20v24H4V20Z"/><path d="M18 44V26h12v18"/></svg>
+          </div>
+          <h3>Home Additions</h3>
+          <p>Extra bedrooms, in-law suites, second stories — additions that match your home's existing structure and style.</p>
         </article>
-        <article class="mobile-item">
-          <button type="button" data-node="Portfolio">Portfolio</button>
-          <p>View project types and completed work approaches.</p>
+
+        <article class="service-card reveal">
+          <div class="service-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48"><rect x="6" y="6" width="36" height="36" rx="2"/><path d="M6 18h36M18 42V18"/></svg>
+          </div>
+          <h3>Kitchen &amp; Bath Remodels</h3>
+          <p>Layout changes, cabinetry, tile, and fixtures — remodels planned around how you actually use the space.</p>
         </article>
-        <article class="mobile-item">
-          <button type="button" data-node="Contact">Contact</button>
-          <p>Reach out to start a discussion or book an estimate.</p>
+
+        <article class="service-card reveal">
+          <div class="service-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48"><path d="M6 24 24 8l18 16"/><path d="M12 22v18h24V22"/></svg>
+          </div>
+          <h3>New Construction</h3>
+          <p>Design-build support for new homes and structures, from permitting through the final inspection.</p>
         </article>
-        <article class="mobile-item">
-          <button type="button" data-node="Request a Quote">Request a Quote</button>
-          <p>Request a proposal with clear next steps.</p>
+
+        <article class="service-card reveal">
+          <div class="service-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48"><path d="M8 40 20 16l8 12 6-8 6 20Z"/></svg>
+          </div>
+          <h3>Whole-Home Renovations</h3>
+          <p>Structural updates, open-concept conversions, and full interior overhauls managed start to finish.</p>
         </article>
-        <article class="mobile-item">
-          <button type="button" data-node="Service Areas">Service Areas</button>
-          <p>Learn where contractor work is delivered.</p>
+
+        <article class="service-card reveal">
+          <div class="service-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="6"/><path d="M24 4v6M24 38v6M4 24h6M38 24h6M9 9l4 4M35 35l4 4M9 39l4-4M35 13l4-4"/></svg>
+          </div>
+          <h3>Repairs &amp; Maintenance</h3>
+          <p>Structural repairs, storm damage, and the smaller jobs other contractors don't want to schedule.</p>
         </article>
-        <article class="mobile-item">
-          <button type="button" data-node="Credentials / Licensing">Credentials</button>
-          <p>See licensing, insurance, and compliance details.</p>
+
+        <article class="service-card reveal">
+          <div class="service-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48"><rect x="8" y="8" width="14" height="14"/><rect x="26" y="8" width="14" height="14"/><rect x="8" y="26" width="14" height="14"/><rect x="26" y="26" width="14" height="14"/></svg>
+          </div>
+          <h3>Commercial Build-Outs</h3>
+          <p>Tenant improvements and small commercial spaces, coordinated to minimize downtime for your business.</p>
         </article>
       </div>
     </section>
+
+    <section id="process" class="process">
+      <div class="section-heading reveal">
+        <p class="eyebrow">How It Works</p>
+        <h2>A straightforward process, start to finish</h2>
+        <p class="section-sub">No jargon, no guessing where things stand. You'll know what's happening at every stage.</p>
+      </div>
+
+      <ol class="process-steps">
+        <li class="process-step reveal">
+          <span class="step-number">01</span>
+          <div>
+            <h3>Free consultation &amp; estimate</h3>
+            <p>We walk the site, talk through your goals and budget, and follow up with a written estimate.</p>
+          </div>
+        </li>
+        <li class="process-step reveal">
+          <span class="step-number">02</span>
+          <div>
+            <h3>Design &amp; planning</h3>
+            <p>We finalize scope, materials, and timeline — and handle permitting where it's required.</p>
+          </div>
+        </li>
+        <li class="process-step reveal">
+          <span class="step-number">03</span>
+          <div>
+            <h3>Construction</h3>
+            <p>Your dedicated crew gets to work, with scheduled check-ins so you always know where things stand.</p>
+          </div>
+        </li>
+        <li class="process-step reveal">
+          <span class="step-number">04</span>
+          <div>
+            <h3>Final walkthrough</h3>
+            <p>We inspect the finished work together and don't consider the job done until you're satisfied.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section id="gallery" class="gallery">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Recent Work</p>
+        <h2>A few projects we're proud of</h2>
+        <p class="section-sub">Photos coming soon — swap these placeholders for before/after shots of your best jobs.</p>
+      </div>
+
+      <div class="gallery-grid">
+        <div class="gallery-item reveal"><span>Project Photo</span></div>
+        <div class="gallery-item reveal"><span>Project Photo</span></div>
+        <div class="gallery-item reveal"><span>Project Photo</span></div>
+        <div class="gallery-item reveal"><span>Project Photo</span></div>
+        <div class="gallery-item reveal"><span>Project Photo</span></div>
+        <div class="gallery-item reveal"><span>Project Photo</span></div>
+      </div>
+    </section>
+
+    <section id="testimonials" class="testimonials">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Client Reviews</p>
+        <h2>What people say after we leave</h2>
+      </div>
+
+      <div class="testimonials-grid">
+        <blockquote class="testimonial-card reveal">
+          <p>"[Placeholder quote — swap in a real client review once you have one.] They kept us updated every step and the addition looks like it was always part of the house."</p>
+          <cite>— Client Name, City</cite>
+        </blockquote>
+        <blockquote class="testimonial-card reveal">
+          <p>"[Placeholder quote.] On budget, on time, and cleaned up the site every single day. Would hire again without hesitation."</p>
+          <cite>— Client Name, City</cite>
+        </blockquote>
+        <blockquote class="testimonial-card reveal">
+          <p>"[Placeholder quote.] Clear communication from the first call to the final walkthrough. No surprise costs."</p>
+          <cite>— Client Name, City</cite>
+        </blockquote>
+      </div>
+    </section>
+
+    <section id="about" class="about">
+      <div class="about-media reveal" aria-hidden="true">
+        <span>Team / Job-Site Photo</span>
+      </div>
+      <div class="about-copy reveal">
+        <p class="eyebrow">About Us</p>
+        <h2>Hands-on, local, and licensed</h2>
+        <p>
+          [Your Company Name] is a general contracting company serving [Your Service Area].
+          [A sentence or two about your partner's background, years of experience, and what
+          they specialize in — trade background, past projects, why clients trust them.]
+        </p>
+        <ul class="about-list">
+          <li>Licensed &amp; insured — License #[XXXXXX]</li>
+          <li>Free, no-obligation estimates</li>
+          <li>Direct communication with your contractor, not a call center</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="cta-banner reveal">
+      <h2>Ready to start your project?</h2>
+      <p>Get a free, no-obligation estimate — most requests get a response within one business day.</p>
+      <a href="#contact" class="btn btn-primary btn-lg">Request a Free Estimate</a>
+    </section>
+
+    <section id="contact" class="contact">
+      <div class="contact-info reveal">
+        <p class="eyebrow">Get In Touch</p>
+        <h2>Let's talk about your project</h2>
+        <p class="section-sub">Fill out the form or reach out directly — whichever's easier.</p>
+
+        <ul class="contact-details">
+          <li><strong>Phone:</strong> <a href="tel:+15555555555">(555) 555-5555</a></li>
+          <li><strong>Email:</strong> <a href="mailto:hello@yourcompany.com">hello@yourcompany.com</a></li>
+          <li><strong>Service Area:</strong> [Your City, State and surrounding areas]</li>
+          <li><strong>Hours:</strong> Mon–Fri, 8am–5pm</li>
+        </ul>
+      </div>
+
+      <form class="contact-form reveal" id="quoteForm">
+        <div class="form-row">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-row form-row-split">
+          <div>
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" name="phone" required>
+          </div>
+          <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <label for="projectType">Project Type</label>
+          <select id="projectType" name="projectType">
+            <option>Home Addition</option>
+            <option>Kitchen / Bath Remodel</option>
+            <option>New Construction</option>
+            <option>Whole-Home Renovation</option>
+            <option>Repair / Maintenance</option>
+            <option>Commercial Build-Out</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="message">Tell us about your project</label>
+          <textarea id="message" name="message" rows="4"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg form-submit">Send Request</button>
+        <p class="form-note">This form doesn't send anywhere yet — connect it to email, a form service (e.g. Formspree), or your CRM before launch.</p>
+      </form>
+    </section>
+
   </main>
 
-  <div id="graphModal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Graph navigation modal">
-    <div class="modal-shell">
-      <header class="modal-header">
-        <div class="modal-brand">
-          <strong>SiteHound Contracting</strong>
-          <span>Graph navigation overview</span>
-        </div>
-        <button id="modalClose" class="modal-close" aria-label="Close graph modal">Close</button>
-      </header>
-      <section class="modal-body">
-        <p class="hint-text">Tap a node to open the detail panel. The center node serves as home/reset.</p>
-        <div class="graph-shell" aria-hidden="true">
-          <svg id="modalGraphSvg" viewBox="0 0 760 660" role="img" aria-hidden="true"></svg>
-        </div>
-      </section>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="brand-mark">[YC]</span>
+        <span class="brand-name">[Your Company Name]</span>
+      </div>
+      <p>&copy; <span id="year"></span> [Your Company Name]. License #[XXXXXX]. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="#services">Services</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#contact">Contact</a>
+      </div>
     </div>
-  </div>
+  </footer>
 
-  <script src="graph.js"></script>
+  <button id="backToTop" class="back-to-top" aria-label="Back to top">↑</button>
+
+  <script src="script.js"></script>
 </body>
 </html>

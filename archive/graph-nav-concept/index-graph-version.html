@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiteHound Contracting</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <p class="eyebrow">SiteHound Contracting</p>
+      <h1 class="site-title">Contracting with clarity, craft, and calm.</h1>
+      <p class="tagline">A modern home for contracting services that values durable work, transparent process, and local trust.</p>
+    </div>
+    <a class="nav-cta" href="#contentPanel">Request a Quote</a>
+  </header>
+
+  <main class="page-content">
+    <section class="hero">
+      <div class="hero-copy">
+        <h2>Navigate the contracting story in a clean, connected experience.</h2>
+        <p>Explore service details, project planning, and core values through a graph-style interface designed to feel intentional, calm, and easy to use.</p>
+      </div>
+      <div class="stats-grid">
+        <article class="stat-card">
+          <strong>Direct process</strong>
+          <p>Concise steps that make planning and hiring a contractor easier.</p>
+        </article>
+        <article class="stat-card">
+          <strong>Professional focus</strong>
+          <p>Contracting services shaped around quality, communication, and practical results.</p>
+        </article>
+        <article class="stat-card">
+          <strong>Local coverage</strong>
+          <p>Responsive work for nearby neighborhoods, renovations, and small commercial updates.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="graph-section">
+      <div class="section-heading">
+        <div>
+          <h3>Graph Navigation</h3>
+          <p>Tap or click a node to reveal content. The center node acts as home and resets the interface.</p>
+        </div>
+        <button id="openGraph" class="nav-cta">Explore Graph</button>
+      </div>
+
+      <div class="graph-shell" aria-label="Contractor service graph navigation">
+        <svg id="graphSvg" viewBox="0 0 960 760" role="img" aria-hidden="true"></svg>
+        <div id="contentPanel" class="panel" aria-live="polite">
+          <button id="panelClose" class="panel-close" aria-label="Close detail panel">Close</button>
+          <h4 id="panelTitle">Click a node to see details</h4>
+          <p id="panelText">The graph is the primary interface for exploring services, workflow, materials, and project types.</p>
+          <div id="panelImage" class="panel-image" role="img" aria-label="Graph detail placeholder"></div>
+          <div id="panelLinks" class="related-links"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mobile-menu" aria-label="Mobile navigation menu">
+      <p class="menu-label">Menu for smaller screens</p>
+      <div class="menu-group mobile-grid">
+        <article class="mobile-item">
+          <button type="button" data-node="Services">Services</button>
+          <p>Explore contracting capabilities and service options.</p>
+        </article>
+        <article class="mobile-item">
+          <button type="button" data-node="Portfolio">Portfolio</button>
+          <p>View project types and completed work approaches.</p>
+        </article>
+        <article class="mobile-item">
+          <button type="button" data-node="Contact">Contact</button>
+          <p>Reach out to start a discussion or book an estimate.</p>
+        </article>
+        <article class="mobile-item">
+          <button type="button" data-node="Request a Quote">Request a Quote</button>
+          <p>Request a proposal with clear next steps.</p>
+        </article>
+        <article class="mobile-item">
+          <button type="button" data-node="Service Areas">Service Areas</button>
+          <p>Learn where contractor work is delivered.</p>
+        </article>
+        <article class="mobile-item">
+          <button type="button" data-node="Credentials / Licensing">Credentials</button>
+          <p>See licensing, insurance, and compliance details.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div id="graphModal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Graph navigation modal">
+    <div class="modal-shell">
+      <header class="modal-header">
+        <div class="modal-brand">
+          <strong>SiteHound Contracting</strong>
+          <span>Graph navigation overview</span>
+        </div>
+        <button id="modalClose" class="modal-close" aria-label="Close graph modal">Close</button>
+      </header>
+      <section class="modal-body">
+        <p class="hint-text">Tap a node to open the detail panel. The center node serves as home/reset.</p>
+        <div class="graph-shell" aria-hidden="true">
+          <svg id="modalGraphSvg" viewBox="0 0 760 660" role="img" aria-hidden="true"></svg>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="graph.js"></script>
+</body>
+</html>
