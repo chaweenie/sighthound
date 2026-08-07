@@ -1,3 +1,23 @@
+// Page loader (running greyhound)
+const pageLoader = document.getElementById('pageLoader');
+document.documentElement.classList.add('is-loading');
+
+function hidePageLoader() {
+  pageLoader.classList.add('is-hidden');
+  document.documentElement.classList.remove('is-loading');
+}
+
+const loaderMinTime = new Promise((resolve) => setTimeout(resolve, 700));
+const pageLoaded = new Promise((resolve) => {
+  if (document.readyState === 'complete') {
+    resolve();
+  } else {
+    window.addEventListener('load', resolve, { once: true });
+  }
+});
+
+Promise.all([loaderMinTime, pageLoaded]).then(hidePageLoader);
+
 // Sticky header shrink + scroll progress bar
 const header = document.getElementById('siteHeader');
 const progressBar = document.getElementById('progressBar');

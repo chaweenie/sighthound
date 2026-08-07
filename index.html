@@ -4,10 +4,40 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sitehound Builders | General Contractor</title>
-  <meta name="description" content="Sitehound Builders — licensed general contractor serving [Your Service Area]. Remodels, additions, and new builds done right.">
+  <meta name="description" content="Sitehound Builders — general contractor serving the Lower Mainland, based out of Burnaby. Handyman work, renovations, and custom homes done right.">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <div id="pageLoader" class="page-loader" role="status" aria-label="Loading">
+    <div class="loader-track">
+      <svg class="loader-dog" viewBox="0 0 240 120" aria-hidden="true">
+        <ellipse class="loader-shadow" cx="128" cy="112" rx="62" ry="6"/>
+        <g class="loader-legs loader-leg-back">
+          <g class="loader-leg-pivot" style="transform-origin: 84px 80px;">
+            <line x1="84" y1="76" x2="80" y2="108"/>
+          </g>
+        </g>
+        <g class="loader-legs loader-leg-front">
+          <g class="loader-leg-pivot" style="transform-origin: 150px 78px;">
+            <line x1="150" y1="74" x2="154" y2="108"/>
+          </g>
+        </g>
+        <g class="loader-body">
+          <path class="loader-tail" d="M76 58 C58 66 42 70 30 64 C22 60 18 52 22 46"/>
+          <ellipse class="loader-silhouette" cx="116" cy="63" rx="46" ry="17" transform="rotate(-8 116 63)"/>
+          <path class="loader-silhouette" d="M150 50
+                   C170 42 190 38 205 40
+                   L222 48
+                   L206 54
+                   C190 50 170 54 154 64
+                   Z"/>
+          <path class="loader-silhouette" d="M178 36 L176 10 L198 34 Z"/>
+        </g>
+      </svg>
+    </div>
+    <p class="loader-text">Sitehound Builders</p>
+  </div>
 
   <div id="progressBar" class="progress-bar"></div>
 
@@ -28,7 +58,7 @@
       </nav>
 
       <div class="header-actions">
-        <a href="tel:+15555555555" class="header-phone">(555) 555-5555</a>
+        <a href="tel:+16043064447" class="header-phone">(604) 306-4447</a>
         <a href="#contact" class="btn btn-primary">Get a Free Quote</a>
         <button id="navToggle" class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
           <span></span><span></span><span></span>
@@ -42,15 +72,15 @@
     <section class="hero">
       <div class="hero-bg" aria-hidden="true"></div>
       <div class="hero-inner reveal">
-        <p class="eyebrow">Licensed &amp; Insured General Contractor</p>
+        <p class="eyebrow">Residential General Contractor</p>
         <h1>Built right. On schedule. No surprises.</h1>
         <p class="hero-sub">
-          Sitehound Builders handles remodels, additions, and new builds across
-          [Your Service Area] — with clear communication from the first estimate to the final walkthrough.
+          Sitehound Builders handles everything from handyman repairs to full custom home builds
+          across the Lower Mainland — with clear communication from the first estimate to the final walkthrough.
         </p>
         <div class="hero-ctas">
           <a href="#contact" class="btn btn-primary btn-lg">Request a Free Estimate</a>
-          <a href="tel:+15555555555" class="btn btn-ghost btn-lg">Call (555) 555-5555</a>
+          <a href="tel:+16043064447" class="btn btn-ghost btn-lg">Call (604) 306-4447</a>
         </div>
       </div>
       <div class="scroll-cue" aria-hidden="true">
@@ -61,77 +91,57 @@
 
     <section class="trust-bar reveal">
       <div class="trust-item">
-        <strong class="stat-number" data-count="15">0</strong>
+        <strong class="stat-number" data-count="12">0</strong>
         <span>Years in Business</span>
       </div>
       <div class="trust-item">
-        <strong class="stat-number" data-count="300">0</strong>
-        <span>Projects Completed</span>
+        <strong class="stat-text">Handyman to Custom Homes</strong>
+        <span>Full-Service Residential Contracting</span>
       </div>
       <div class="trust-item">
         <strong class="stat-number" data-count="100">0</strong>
         <span>% Licensed &amp; Insured</span>
-      </div>
-      <div class="trust-item">
-        <strong class="stat-number" data-count="5">0</strong>
-        <span>Star Average Rating</span>
       </div>
     </section>
 
     <section id="services" class="services">
       <div class="section-heading">
         <p class="eyebrow">What We Do</p>
-        <h2>Full-service contracting, one point of contact</h2>
-        <p class="section-sub">From a single repair to a ground-up build, Sitehound Builders manages the whole project so you don't have to juggle subcontractors.</p>
+        <h2>Residential contracting, one point of contact</h2>
+        <p class="section-sub">From a single repair to a ground-up custom home, Sitehound Builders manages the whole project — and brings in the right skilled trades whenever a job calls for them.</p>
       </div>
 
       <div class="services-grid">
         <article class="service-card reveal">
           <div class="service-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48"><path d="M24 4 44 20v24H4V20Z"/><path d="M18 44V26h12v18"/></svg>
-          </div>
-          <h3>Home Additions</h3>
-          <p>Extra bedrooms, in-law suites, second stories — additions that match your home's existing structure and style.</p>
-        </article>
-
-        <article class="service-card reveal">
-          <div class="service-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48"><rect x="6" y="6" width="36" height="36" rx="2"/><path d="M6 18h36M18 42V18"/></svg>
-          </div>
-          <h3>Kitchen &amp; Bath Remodels</h3>
-          <p>Layout changes, cabinetry, tile, and fixtures — remodels planned around how you actually use the space.</p>
-        </article>
-
-        <article class="service-card reveal">
-          <div class="service-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48"><path d="M6 24 24 8l18 16"/><path d="M12 22v18h24V22"/></svg>
           </div>
-          <h3>New Construction</h3>
-          <p>Design-build support for new homes and structures, from permitting through the final inspection.</p>
+          <h3>Custom Homes</h3>
+          <p>Design-build support for new homes from the ground up, from permitting through the final inspection.</p>
         </article>
 
         <article class="service-card reveal">
           <div class="service-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48"><path d="M8 40 20 16l8 12 6-8 6 20Z"/></svg>
           </div>
-          <h3>Whole-Home Renovations</h3>
-          <p>Structural updates, open-concept conversions, and full interior overhauls managed start to finish.</p>
+          <h3>Renovations &amp; Additions</h3>
+          <p>Kitchen and bath remodels, whole-home renovations, and additions built to match your home's existing structure and style.</p>
         </article>
 
         <article class="service-card reveal">
           <div class="service-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="6"/><path d="M24 4v6M24 38v6M4 24h6M38 24h6M9 9l4 4M35 35l4 4M9 39l4-4M35 13l4-4"/></svg>
           </div>
-          <h3>Repairs &amp; Maintenance</h3>
-          <p>Structural repairs, storm damage, and the smaller jobs other contractors don't want to schedule.</p>
+          <h3>Handyman Services</h3>
+          <p>Repairs, small fixes, and the smaller jobs other contractors don't want to schedule — no project's too small.</p>
         </article>
 
         <article class="service-card reveal">
           <div class="service-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48"><rect x="8" y="8" width="14" height="14"/><rect x="26" y="8" width="14" height="14"/><rect x="8" y="26" width="14" height="14"/><rect x="26" y="26" width="14" height="14"/></svg>
           </div>
-          <h3>Commercial Build-Outs</h3>
-          <p>Tenant improvements and small commercial spaces, coordinated to minimize downtime for your business.</p>
+          <h3>Skilled Trade Coordination</h3>
+          <p>As your general contractor, we bring in the right licensed trades for whatever the job needs — and point you in the right direction on anything we don't handle directly.</p>
         </article>
       </div>
     </section>
@@ -220,14 +230,21 @@
       </div>
       <div class="about-copy reveal">
         <p class="eyebrow">About Us</p>
-        <h2>Hands-on, local, and licensed</h2>
+        <h2>Hands-on, local, and easy to reach</h2>
         <p>
-          Sitehound Builders is a general contracting company serving [Your Service Area].
-          [A sentence or two about your partner's background, years of experience, and what
-          they specialize in — trade background, past projects, why clients trust them.]
+          Sitehound Builders is a residential general contracting company based in Burnaby, serving
+          the Lower Mainland. With 15+ years of trade experience, our founder has built a reputation
+          on doing whatever the project needs — from quick handyman fixes to full custom home builds —
+          including a 5-year custom home project in West Vancouver, built from the ground up between
+          2018 and 2023.
+        </p>
+        <p>
+          We thrive on communication: every project starts with a clear, shared goal between us and
+          the client, and no job is too big or too small. If there's ever a service we can't provide
+          directly, we'll point you toward someone who can.
         </p>
         <ul class="about-list">
-          <li>Licensed &amp; insured — License #[XXXXXX]</li>
+          <li>Insured, with 15+ years of hands-on trade experience</li>
           <li>Free, no-obligation estimates</li>
           <li>Direct communication with your contractor, not a call center</li>
         </ul>
@@ -247,9 +264,9 @@
         <p class="section-sub">Fill out the form or reach out directly — whichever's easier.</p>
 
         <ul class="contact-details">
-          <li><strong>Phone:</strong> <a href="tel:+15555555555">(555) 555-5555</a></li>
-          <li><strong>Email:</strong> <a href="mailto:hello@yourcompany.com">hello@yourcompany.com</a></li>
-          <li><strong>Service Area:</strong> [Your City, State and surrounding areas]</li>
+          <li><strong>Phone:</strong> <a href="tel:+16043064447">(604) 306-4447</a></li>
+          <li><strong>Email:</strong> <a href="mailto:sitehoundbuilders@gmail.com">sitehoundbuilders@gmail.com</a></li>
+          <li><strong>Service Area:</strong> Lower Mainland, based in Burnaby</li>
           <li><strong>Hours:</strong> Mon–Fri, 8am–5pm</li>
         </ul>
       </div>
@@ -272,12 +289,10 @@
         <div class="form-row">
           <label for="projectType">Project Type</label>
           <select id="projectType" name="projectType">
-            <option>Home Addition</option>
+            <option>Custom Home</option>
+            <option>Renovation / Addition</option>
             <option>Kitchen / Bath Remodel</option>
-            <option>New Construction</option>
-            <option>Whole-Home Renovation</option>
-            <option>Repair / Maintenance</option>
-            <option>Commercial Build-Out</option>
+            <option>Handyman / Repair</option>
             <option>Other</option>
           </select>
         </div>
@@ -298,7 +313,7 @@
         <span class="brand-mark">SB</span>
         <span class="brand-name">Sitehound Builders</span>
       </div>
-      <p>&copy; <span id="year"></span> Sitehound Builders. License #[XXXXXX]. All rights reserved.</p>
+      <p>&copy; <span id="year"></span> Sitehound Builders. All rights reserved.</p>
       <div class="footer-links">
         <a href="#services">Services</a>
         <a href="#gallery">Gallery</a>
