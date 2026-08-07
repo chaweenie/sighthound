@@ -117,19 +117,17 @@ html.is-loading { overflow: hidden; }
 }
 
 .loader-track {
-  width: 240px;
+  width: 200px;
   height: 100px;
-  overflow: hidden;
   position: relative;
 }
 
 .loader-dog {
   position: absolute;
-  top: 20px;
+  top: 0;
   left: 0;
-  width: 120px;
-  height: 60px;
-  animation: loaderRun 1.4s linear infinite;
+  width: 100%;
+  height: 100%;
 }
 
 .loader-silhouette { fill: var(--amber); }
@@ -139,33 +137,27 @@ html.is-loading { overflow: hidden; }
   stroke: var(--amber);
   stroke-width: 5;
   stroke-linecap: round;
-  transform-origin: 66px 58px;
-  animation: loaderTailWag 0.5s ease-in-out infinite;
 }
 
-.loader-dog line {
+.loader-leg {
   stroke: var(--amber);
-  stroke-width: 9;
+  stroke-width: 10;
   stroke-linecap: round;
 }
 
-.loader-body {
-  transform-origin: center;
-  animation: loaderBob 0.5s ease-in-out infinite;
+.loader-pose {
+  animation-duration: 0.9s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
 }
 
-.loader-leg-pivot {
-  animation: loaderLegSwing 0.5s ease-in-out infinite;
-}
-
-.loader-leg-back .loader-leg-pivot {
-  animation-delay: -0.25s;
-}
+.loader-pose-a { animation-name: loaderPoseA; }
+.loader-pose-b { animation-name: loaderPoseB; }
 
 .loader-shadow {
   fill: var(--green);
-  transform-origin: 130px 108px;
-  animation: loaderShadowPulse 0.5s ease-in-out infinite;
+  transform-origin: 120px 106px;
+  animation: loaderShadowPulse 0.9s ease-in-out infinite;
 }
 
 .loader-text {
@@ -177,35 +169,29 @@ html.is-loading { overflow: hidden; }
   font-weight: 700;
 }
 
-@keyframes loaderRun {
-  0% { transform: translateX(-130px); }
-  100% { transform: translateX(240px); }
+@keyframes loaderPoseA {
+  0%, 38% { opacity: 1; }
+  50%, 88% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
-@keyframes loaderLegSwing {
-  0%, 100% { transform: rotate(-22deg); }
-  50% { transform: rotate(22deg); }
-}
-
-@keyframes loaderTailWag {
-  0%, 100% { transform: rotate(-6deg); }
-  50% { transform: rotate(8deg); }
-}
-
-@keyframes loaderBob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
+@keyframes loaderPoseB {
+  0%, 38% { opacity: 0; }
+  50%, 88% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 @keyframes loaderShadowPulse {
-  0%, 100% { opacity: 0.18; transform: scaleX(0.9); }
-  50% { opacity: 0.32; transform: scaleX(1); }
+  0%, 38% { opacity: 0.3; transform: scaleX(1); }
+  50%, 88% { opacity: 0.14; transform: scaleX(0.75); }
+  100% { opacity: 0.3; transform: scaleX(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .loader-dog, .loader-body, .loader-leg-pivot, .loader-tail, .loader-shadow {
+  .loader-pose-a, .loader-pose-b, .loader-shadow {
     animation: none;
   }
+  .loader-pose-b { opacity: 0; }
 }
 
 /* ---------- Header ---------- */
