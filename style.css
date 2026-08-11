@@ -1,16 +1,16 @@
 :root {
   color-scheme: dark;
 
-  --bg: #102102;
-  --surface: #1D360A;
-  --surface-alt: #16350D;
+  --bg: #1E291B;
+  --surface: #23361F;
+  --surface-alt: #23361F;
   --ink: #F0DEC5;
   --ink-soft: #D6C4A8;
   --ink-faint: rgba(240, 222, 197, 0.72);
   --line: rgba(255, 255, 255, 0.1);
 
-  --navy: #1D360A;
-  --navy-deep: #102102;
+  --navy: #23361F;
+  --navy-deep: #1E291B;
   --amber: #F29018;
   --amber-deep: #c9640e;
   --green: #614729;
@@ -106,7 +106,7 @@ html.is-loading { overflow: hidden; }
   align-items: center;
   justify-content: center;
   gap: 1.25rem;
-  background: #102102;
+  background: var(--bg);
   opacity: 1;
   visibility: visible;
   transition: opacity 0.5s var(--ease), visibility 0.5s var(--ease);
@@ -198,7 +198,7 @@ html.is-loading { overflow: hidden; }
 }
 
 .site-header.scrolled {
-  background: rgba(16, 32, 2, 0.94);
+  background: rgba(30, 41, 27, 0.94);
   border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
@@ -385,7 +385,7 @@ html.is-loading { overflow: hidden; }
   background:
     radial-gradient(circle at 18% 20%, rgba(242, 144, 24, 0.18), transparent 35%),
     radial-gradient(circle at 82% 78%, rgba(97, 71, 41, 0.12), transparent 45%),
-    linear-gradient(180deg, #102102 0%, #16350D 100%);
+    linear-gradient(180deg, var(--bg) 0%, var(--surface-alt) 100%);
   z-index: -2;
 }
 
@@ -394,8 +394,8 @@ html.is-loading { overflow: hidden; }
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(16, 33, 10, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(16, 33, 10, 0.06) 1px, transparent 1px);
+    linear-gradient(rgba(30, 41, 27, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 41, 27, 0.06) 1px, transparent 1px);
   background-size: 56px 56px;
   mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 40%, transparent 90%);
   z-index: -1;
@@ -658,7 +658,7 @@ html.is-loading { overflow: hidden; }
     top: 100%;
     left: 0;
     right: 0;
-    background: rgba(16, 32, 2, 0.96);
+    background: rgba(30, 41, 27, 0.96);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     display: none;
     flex-direction: column;
@@ -837,7 +837,7 @@ html.is-loading { overflow: hidden; }
 .cta-banner {
   max-width: none;
   text-align: center;
-  background: linear-gradient(135deg, #102102, #1D360A);
+  background: linear-gradient(135deg, var(--bg), var(--surface));
   border-radius: 0;
   padding: clamp(3rem, 7vw, 5rem) 1.5rem;
 }
