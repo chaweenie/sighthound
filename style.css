@@ -132,19 +132,6 @@ html.is-loading { overflow: hidden; }
 
 .loader-silhouette { fill: var(--amber); }
 
-.loader-tail {
-  fill: none;
-  stroke: var(--amber);
-  stroke-width: 5;
-  stroke-linecap: round;
-}
-
-.loader-leg {
-  stroke: var(--amber);
-  stroke-width: 10;
-  stroke-linecap: round;
-}
-
 .loader-pose {
   animation-duration: 0.9s;
   animation-timing-function: ease-in-out;

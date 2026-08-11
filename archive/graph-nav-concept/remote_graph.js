@@ -1,7 +1,7 @@
 ﻿const nodes = [
   {
     id: 'home',
-    label: 'SiteHound',
+    label: 'Sighthound',
     type: 'center',
     description: 'Professional contracting for residential and commercial spaces, with a focus on trust, quality, and calm communication.',
     image: 'images/about_me/aboutme_01.jpg',
