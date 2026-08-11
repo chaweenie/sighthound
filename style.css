@@ -1,26 +1,26 @@
 :root {
   color-scheme: light;
 
-  --bg: #f7f6f3;
-  --surface: #ffffff;
-  --surface-alt: #f0eee9;
-  --ink: #1c1f24;
-  --ink-soft: #52585f;
-  --ink-faint: #838a92;
-  --line: #e4e1da;
+  --bg: #ffffff;
+  --surface: #F0DEC5;
+  --surface-alt: #ffffff;
+  --ink: #102102;
+  --ink-soft: #1D360A;
+  --ink-faint: rgba(97, 71, 41, 0.88);
+  --line: #e6d2ba;
 
-  --navy: #14213d;
-  --navy-deep: #0c1526;
-  --amber: #e2861f;
-  --amber-deep: #c46a12;
-  --green: #3f8d5b;
-  --green-deep: #2c6b41;
+  --navy: #1D360A;
+  --navy-deep: #102102;
+  --amber: #F29018;
+  --amber-deep: #c9640e;
+  --green: #614729;
+  --green-deep: #3d270f;
 
   --radius: 14px;
   --radius-sm: 8px;
-  --shadow-sm: 0 1px 2px rgba(20, 33, 61, 0.06);
-  --shadow-md: 0 8px 24px rgba(20, 33, 61, 0.10);
-  --shadow-lg: 0 24px 56px rgba(20, 33, 61, 0.16);
+  --shadow-sm: 0 1px 2px rgba(16, 33, 10, 0.06);
+  --shadow-md: 0 8px 24px rgba(16, 33, 10, 0.10);
+  --shadow-lg: 0 24px 56px rgba(16, 33, 10, 0.16);
 
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --header-h: 84px;
@@ -335,7 +335,7 @@ html.is-loading { overflow: hidden; }
 
 .btn-primary {
   background: var(--amber);
-  color: #1c1204;
+  color: var(--ink);
   box-shadow: var(--shadow-sm);
 }
 
@@ -347,9 +347,7 @@ html.is-loading { overflow: hidden; }
 
 .btn-ghost {
   background: transparent;
-  border-color: rgba(20, 33, 61, 0.25);
-  color: var(--navy-deep);
-}
+  border-color: rgba(16, 33, 10, 0.25);
 
 .btn-ghost:hover {
   border-color: var(--green-deep);
@@ -376,9 +374,9 @@ html.is-loading { overflow: hidden; }
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 18% 20%, rgba(226, 134, 31, 0.16), transparent 45%),
-    radial-gradient(circle at 82% 78%, rgba(63, 141, 91, 0.14), transparent 50%),
-    linear-gradient(180deg, #fbfaf7 0%, #f7f6f3 100%);
+    radial-gradient(circle at 18% 20%, rgba(242, 144, 24, 0.16), transparent 38%),
+    radial-gradient(circle at 82% 78%, rgba(97, 71, 41, 0.12), transparent 50%),
+    linear-gradient(180deg, #ffffff 0%, #F0DEC5 100%);
   z-index: -2;
 }
 
@@ -387,8 +385,8 @@ html.is-loading { overflow: hidden; }
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(20, 33, 61, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(20, 33, 61, 0.05) 1px, transparent 1px);
+    linear-gradient(rgba(16, 33, 10, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 33, 10, 0.06) 1px, transparent 1px);
   background-size: 56px 56px;
   mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 40%, transparent 90%);
   z-index: -1;
@@ -783,7 +781,7 @@ html.is-loading { overflow: hidden; }
   background: linear-gradient(135deg, var(--navy-deep), var(--navy));
   display: grid;
   place-items: center;
-  color: rgba(255,255,255,0.55);
+  color: rgba(255,255,255,0.88);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -816,16 +814,7 @@ html.is-loading { overflow: hidden; }
 }
 
 .cta-banner h2 { color: #fff; }
-.cta-banner p { color: rgba(255,255,255,0.72); max-width: 480px; margin-left: auto; margin-right: auto; }
-
-/* ---------- Contact ---------- */
-.contact {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap: 3.5rem;
-}
-
-.contact-details {
+.cta-banner p { color: rgba(255,255,255,0.82); max-width: 480px; margin-left: auto; margin-right: auto; }
   margin-top: 1.5rem;
   display: grid;
   gap: 0.75rem;
@@ -870,7 +859,7 @@ input, select, textarea {
   padding: 0.7rem 0.85rem;
   border-radius: var(--radius-sm);
   border: 1.5px solid var(--line);
-  background: #fff;
+  background: var(--surface-alt);
   color: var(--ink);
   transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
 }
@@ -878,7 +867,7 @@ input, select, textarea {
 input:focus, select:focus, textarea:focus {
   outline: none;
   border-color: var(--amber);
-  box-shadow: 0 0 0 3px rgba(224, 138, 44, 0.18);
+  box-shadow: 0 0 0 3px rgba(242, 144, 24, 0.18);
 }
 
 .form-submit { margin-top: 0.25rem; }
@@ -892,7 +881,7 @@ input:focus, select:focus, textarea:focus {
 /* ---------- Footer ---------- */
 .site-footer {
   background: var(--navy-deep);
-  color: rgba(255,255,255,0.6);
+  color: rgba(255,255,255,0.78);
   padding: 2.5rem 1.5rem;
 }
 
@@ -911,12 +900,12 @@ input:focus, select:focus, textarea:focus {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  color: #fff;
+  color: white;
   font-weight: 700;
 }
 
 .footer-links { display: flex; gap: 1.5rem; }
-.footer-links a:hover { color: #fff; }
+.footer-links a:hover { color: white; }
 
 /* ---------- Back to top ---------- */
 .back-to-top {
@@ -928,7 +917,7 @@ input:focus, select:focus, textarea:focus {
   border-radius: 50%;
   border: none;
   background: var(--navy-deep);
-  color: #fff;
+  color: white;
   font-size: 1.2rem;
   cursor: pointer;
   box-shadow: var(--shadow-md);
