@@ -366,13 +366,13 @@ html.is-loading { overflow: hidden; }
 }
 
 .btn-with-note .btn {
-  padding-right: 2.3rem;
+  padding-right: 2.6rem;
 }
 
 .btn-with-note .disclaimer {
   position: absolute;
   top: 50%;
-  right: 0.55rem;
+  right: 1rem;
   transform: translateY(-50%);
   z-index: 2;
 }
