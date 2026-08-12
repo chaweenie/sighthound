@@ -1385,6 +1385,10 @@ label {
   color: var(--ink-soft);
 }
 
+.required-mark {
+  color: #e88a8a;
+}
+
 input, select, textarea {
   font: inherit;
   padding: 0.7rem 0.85rem;

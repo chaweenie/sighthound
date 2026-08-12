@@ -113,27 +113,10 @@ statEls.forEach((el) => statObserver.observe(el));
 const quoteForm = document.getElementById('quoteForm');
 const formStatus = document.getElementById('formStatus');
 
-// Ideal start/finish date dropdowns: "Flexible" plus the next 18 months.
-function populateDateSelect(select) {
-  const flexible = document.createElement('option');
-  flexible.value = 'Flexible / not sure yet';
-  flexible.textContent = 'Flexible / not sure yet';
-  select.appendChild(flexible);
-
-  const monthFormatter = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' });
-  const now = new Date();
-
-  for (let i = 0; i < 18; i++) {
-    const optionDate = new Date(now.getFullYear(), now.getMonth() + i, 1);
-    const label = monthFormatter.format(optionDate);
-    const option = document.createElement('option');
-    option.value = label;
-    option.textContent = label;
-    select.appendChild(option);
-  }
-}
-
-[document.getElementById('startDate'), document.getElementById('finishDate')].forEach(populateDateSelect);
+// Ideal start/finish date pickers: don't allow picking a date in the past.
+const todayISO = new Date().toISOString().split('T')[0];
+document.getElementById('startDate').min = todayISO;
+document.getElementById('finishDate').min = todayISO;
 
 function setFormStatus(message, kind) {
   formStatus.textContent = message;

@@ -284,21 +284,21 @@
         <div class="form-section">
           <p class="form-section-title">Your Details</p>
           <div class="form-row">
-            <label for="name">Name</label>
+            <label for="name">Name <span class="required-mark" aria-hidden="true">*</span></label>
             <input type="text" id="name" name="name" required autocomplete="name">
           </div>
           <div class="form-row form-row-split">
             <div>
-              <label for="phone">Phone</label>
+              <label for="phone">Phone <span class="required-mark" aria-hidden="true">*</span></label>
               <input type="tel" id="phone" name="phone" required autocomplete="tel">
             </div>
             <div>
-              <label for="email">Email</label>
+              <label for="email">Email <span class="required-mark" aria-hidden="true">*</span></label>
               <input type="email" id="email" name="email" required autocomplete="email">
             </div>
           </div>
           <div class="form-row">
-            <label for="location">Location</label>
+            <label for="location">Location <span class="required-mark" aria-hidden="true">*</span></label>
             <input type="text" id="location" name="location" placeholder="City or neighbourhood" required autocomplete="address-level2">
           </div>
         </div>
@@ -306,8 +306,8 @@
         <div class="form-section">
           <p class="form-section-title">Project Details</p>
           <div class="form-row">
-            <label for="projectType">Project Type</label>
-            <select id="projectType" name="projectType">
+            <label for="projectType">Project Type <span class="required-mark" aria-hidden="true">*</span></label>
+            <select id="projectType" name="projectType" required>
               <option>Renovation / Addition</option>
               <option>Kitchen / Bath Remodel</option>
               <option>Handyman / Repair</option>
@@ -317,15 +317,15 @@
           <div class="form-row form-row-split">
             <div>
               <label for="startDate">Ideal Start Date</label>
-              <select id="startDate" name="startDate"></select>
+              <input type="date" id="startDate" name="startDate">
             </div>
             <div>
               <label for="finishDate">Ideal Finish Date</label>
-              <select id="finishDate" name="finishDate"></select>
+              <input type="date" id="finishDate" name="finishDate">
             </div>
           </div>
           <div class="form-row">
-            <label for="message">Tell us about your project</label>
+            <label for="message">Tell us about your project <span class="required-mark" aria-hidden="true">*</span></label>
             <textarea id="message" name="message" rows="4" required></textarea>
           </div>
         </div>
