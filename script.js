@@ -305,13 +305,16 @@ if (galleryFilters) {
 }
 
 // Slow linear auto-scroll that yields to the visitor: grabbing the strip
-// (mouse drag, touch, or wheel) decelerates the autoplay to a stop and hands
-// over full control, then it eases back up to speed once they let go.
+// (mouse drag, touch, or wheel) hands over full control, and releasing a
+// mouse drag carries on at the velocity it was moving — then that speed
+// eases back down (or up) to the gentle cruise speed, same direction the
+// whole time, rather than stopping dead and restarting from zero.
 const galleryMarquee = (() => {
-  const MAX_SPEED = 0.35; // px per frame
-  const ACCEL = 0.006;
-  const DECEL = 0.03;
+  const MAX_SPEED = 0.35; // px per frame — the steady autoplay cruise speed
+  const MAX_FLING = 6; // px per frame — hard cap on release-velocity momentum
+  const EASE_FACTOR = 0.025; // how fast currentSpeed eases toward MAX_SPEED
   const CLICK_THRESHOLD = 6; // px of movement before a mousedown counts as a drag
+  const VELOCITY_WINDOW_MS = 120; // how recent a mousemove has to be to count toward release velocity
 
   let singleSetWidth = 0;
   let isLooping = false;
@@ -323,22 +326,30 @@ const galleryMarquee = (() => {
   // and only use it to drive scrollLeft while auto-scrolling.
   let scrollPosition = 0;
   let rafId = null;
+  let lastFrameTime = 0;
   let wheelIdleTimer = null;
 
   let isDragging = false;
   let dragStartX = 0;
   let dragStartScrollLeft = 0;
   let dragMoved = 0;
+  let moveSamples = [];
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function tick() {
+  function tick(now) {
+    const frameMs = lastFrameTime ? Math.min(now - lastFrameTime, 100) : 16.67;
+    lastFrameTime = now;
+
     if (isLooping) {
-      if (isInteracting || prefersReducedMotion) {
-        currentSpeed = Math.max(0, currentSpeed - DECEL);
+      if (isInteracting) {
+        // Fully manual — the drag/touch/wheel handler owns scrollLeft.
+      } else if (prefersReducedMotion) {
+        currentSpeed = 0;
       } else {
-        currentSpeed = Math.min(MAX_SPEED, currentSpeed + ACCEL);
-        scrollPosition += currentSpeed;
+        const frameScale = frameMs / 16.67;
+        currentSpeed += (MAX_SPEED - currentSpeed) * EASE_FACTOR * frameScale;
+        scrollPosition += currentSpeed * frameScale;
         galleryScroll.scrollLeft = scrollPosition;
       }
     }
@@ -362,10 +373,13 @@ const galleryMarquee = (() => {
     isInteracting = true;
   }
 
-  function interactionEnd() {
+  function interactionEnd(releaseSpeed) {
     isInteracting = false;
-    // Pick auto-scroll back up from wherever the visitor left it.
+    // Pick auto-scroll back up from wherever the visitor left it, carrying
+    // over any release velocity (0 for touch/wheel — the browser already
+    // handles their own momentum natively).
     scrollPosition = galleryScroll.scrollLeft;
+    currentSpeed = releaseSpeed || 0;
   }
 
   function onMouseDown(e) {
@@ -374,6 +388,7 @@ const galleryMarquee = (() => {
     dragMoved = 0;
     dragStartX = e.pageX;
     dragStartScrollLeft = galleryScroll.scrollLeft;
+    moveSamples = [{ t: performance.now(), x: e.pageX }];
     interactionStart();
     galleryScroll.classList.add('is-dragging');
     window.addEventListener('mousemove', onMouseMove);
@@ -385,6 +400,12 @@ const galleryMarquee = (() => {
     const delta = e.pageX - dragStartX;
     galleryScroll.scrollLeft = dragStartScrollLeft - delta;
     dragMoved = Math.max(dragMoved, Math.abs(delta));
+
+    const now = performance.now();
+    moveSamples.push({ t: now, x: e.pageX });
+    while (moveSamples.length > 2 && now - moveSamples[0].t > VELOCITY_WINDOW_MS) {
+      moveSamples.shift();
+    }
   }
 
   function onMouseUp() {
@@ -393,19 +414,28 @@ const galleryMarquee = (() => {
     window.removeEventListener('mousemove', onMouseMove);
     window.removeEventListener('mouseup', onMouseUp);
     if (dragMoved > CLICK_THRESHOLD) galleryMarquee.suppressNextClick = true;
-    interactionEnd();
+
+    let releaseSpeed = 0;
+    const first = moveSamples[0];
+    const last = moveSamples[moveSamples.length - 1];
+    const dt = last ? last.t - first.t : 0;
+    if (dt > 0) {
+      const mousePxPerMs = (last.x - first.x) / dt;
+      releaseSpeed = Math.max(-MAX_FLING, Math.min(MAX_FLING, -mousePxPerMs * 16.67));
+    }
+    interactionEnd(releaseSpeed);
   }
 
   function onWheel() {
     interactionStart();
     clearTimeout(wheelIdleTimer);
-    wheelIdleTimer = setTimeout(interactionEnd, 150);
+    wheelIdleTimer = setTimeout(() => interactionEnd(0), 150);
   }
 
   galleryScroll.addEventListener('mousedown', onMouseDown);
   galleryScroll.addEventListener('touchstart', interactionStart, { passive: true });
-  galleryScroll.addEventListener('touchend', interactionEnd);
-  galleryScroll.addEventListener('touchcancel', interactionEnd);
+  galleryScroll.addEventListener('touchend', () => interactionEnd(0));
+  galleryScroll.addEventListener('touchcancel', () => interactionEnd(0));
   galleryScroll.addEventListener('wheel', onWheel, { passive: true });
   galleryScroll.addEventListener('scroll', handleScroll);
   rafId = requestAnimationFrame(tick);
