@@ -355,62 +355,48 @@ html.is-loading { overflow: hidden; }
 .btn-lg { padding: 0.9rem 1.9rem; font-size: 1rem; }
 
 /* ---------- Disclaimer tooltip ---------- */
-/* Groups a CTA button with its disclaimer note. The note is pinned as a small
-   badge on the button's corner (not nested inside the <a> — buttons can't
-   validly nest inside links) so it reads as part of the button and keeps its
-   own background for contrast, regardless of the page behind it. */
+/* Groups a CTA button with its disclaimer note. The note is an info-icon
+   badge sitting inside the button's own bounds (not nested inside the <a> —
+   buttons can't validly nest inside links, so it's a sibling positioned on
+   top of reserved padding instead). */
 .btn-with-note {
   position: relative;
   display: inline-flex;
   align-items: center;
 }
 
+.btn-with-note .btn {
+  padding-right: 2.3rem;
+}
+
 .btn-with-note .disclaimer {
   position: absolute;
-  top: -0.4rem;
-  right: -0.4rem;
+  top: 50%;
+  right: 0.55rem;
+  transform: translateY(-50%);
   z-index: 2;
 }
 
 .btn-with-note .disclaimer-trigger {
   width: 1.3rem;
   height: 1.3rem;
-  border-radius: 50%;
-  background: var(--navy-deep);
-  color: var(--ink);
-  border: 1.5px solid var(--bg);
-  font-size: 0.72rem;
-  font-weight: 700;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   padding: 0;
-  opacity: 0.92;
-  box-shadow: var(--shadow-sm);
+  border: none;
+  background: none;
+  opacity: 0.85;
+  transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
 }
 
 .btn-with-note .disclaimer-trigger:hover,
 .btn-with-note .disclaimer-trigger:focus-visible {
   opacity: 1;
-  background: var(--amber-deep);
-  color: #fff;
+  transform: scale(1.1);
 }
 
-/* On touch/mobile widths, swap the asterisk for a clearer tap-to-info glyph. */
-@media (max-width: 780px) {
-  .btn-with-note .disclaimer-trigger {
-    font-size: 0;
-  }
-
-  .btn-with-note .disclaimer-trigger::before {
-    content: "i";
-    display: block;
-    font-size: 0.8rem;
-    font-style: italic;
-    font-weight: 700;
-    font-family: "Georgia", "Times New Roman", serif;
-  }
+.disclaimer-icon {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .disclaimer {
@@ -444,7 +430,7 @@ html.is-loading { overflow: hidden; }
   left: 50%;
   transform: translateX(-50%) translateY(4px);
   width: max-content;
-  max-width: 240px;
+  max-width: min(240px, calc(100vw - 2rem));
   background: var(--navy-deep);
   color: var(--ink);
   font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
@@ -474,21 +460,37 @@ html.is-loading { overflow: hidden; }
   border-top-color: var(--navy-deep);
 }
 
-/* The header sits at the very top of the page with no room above it, and its
-   trigger sits near the right edge — flip the tip below and right-anchor it. */
+/* Button-attached tooltips: their trigger always sits near the button's
+   right-inside edge, which is often close to the viewport edge (full-width
+   mobile buttons, header CTA) — right-anchor instead of centering so the
+   tip can never overflow off-screen regardless of where the button sits. */
+.btn-with-note .disclaimer-tip {
+  left: auto;
+  right: -0.5rem;
+}
+
+.btn-with-note .disclaimer-tip::after {
+  left: auto;
+  right: 1.1rem;
+  transform: none;
+}
+
+.btn-with-note .disclaimer-trigger:hover + .disclaimer-tip,
+.btn-with-note .disclaimer-trigger:focus + .disclaimer-tip {
+  transform: translateY(0);
+}
+
+/* The header sits at the very top of the page with no room above it —
+   flip its tip to open downward instead of upward. */
 .header-actions .disclaimer-tip {
   top: calc(100% + 0.6rem);
   bottom: auto;
-  left: auto;
-  right: -0.4rem;
   transform: translateY(-4px);
 }
 
 .header-actions .disclaimer-tip::after {
   top: auto;
   bottom: 100%;
-  left: auto;
-  right: 1rem;
   border-top-color: transparent;
   border-bottom-color: var(--navy-deep);
 }
@@ -866,6 +868,22 @@ html.is-loading { overflow: hidden; }
 .project-badge-commercial {
   background: var(--amber);
   color: var(--navy-deep);
+}
+
+/* Sits directly on the photo, so it needs a contrast backing of its own
+   rather than relying on the bottom gradient. */
+.project-card-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 2;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+}
+
+.project-card-badge.project-badge-residential {
+  background: rgba(10, 14, 9, 0.72);
+  color: #fff;
+  backdrop-filter: blur(2px);
 }
 
 .gallery-empty {

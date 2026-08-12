@@ -186,12 +186,12 @@ function renderGallery(filter) {
     card.setAttribute('aria-label', `View photos and details for ${project.title}`);
     card.innerHTML = `
       <img class="project-card-img" src="${coverImagePath(project)}" alt="" loading="lazy">
+      <span class="project-badge project-card-badge project-badge-${CATEGORY_CLASS[project.type]}">${CATEGORY_LABEL[project.type]}</span>
       <span class="project-card-overlay">
         <span class="project-card-title">${project.title}</span>
         <span class="project-card-meta">
           <span class="project-card-year">${project.year}</span>
           <span class="project-card-scope">${SCOPE_LABEL[project.scope]}</span>
-          <span class="project-badge project-badge-${CATEGORY_CLASS[project.type]}">${CATEGORY_LABEL[project.type]}</span>
         </span>
       </span>
     `;
