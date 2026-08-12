@@ -1318,6 +1318,14 @@ html.modal-open { overflow: hidden; }
   margin-right: auto;
 }
 
+/* ---------- Contact ---------- */
+.contact {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
 .contact-details li {
   display: flex;
   align-items: center;
@@ -1344,7 +1352,23 @@ html.modal-open { overflow: hidden; }
   border-radius: var(--radius);
   padding: 2rem;
   display: grid;
+  gap: 1.5rem;
+}
+
+.form-section {
+  display: grid;
   gap: 1.1rem;
+}
+
+.form-section-title {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--amber-deep);
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--line);
 }
 
 .form-row { display: grid; gap: 0.4rem; }
@@ -1377,13 +1401,34 @@ input:focus, select:focus, textarea:focus {
   box-shadow: 0 0 0 3px rgba(242, 144, 24, 0.18);
 }
 
+.form-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.form-checkbox input {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--amber);
+  cursor: pointer;
+}
+
 .form-submit { margin-top: 0.25rem; }
 
-.form-note {
-  font-size: 0.78rem;
-  color: var(--ink-faint);
+.form-status {
+  font-size: 0.85rem;
+  font-weight: 600;
   margin: 0;
+  min-height: 1.2em;
 }
+
+.form-status-success { color: #8fd19e; }
+.form-status-error { color: #e88a8a; }
 
 /* ---------- Footer ---------- */
 .site-footer {

@@ -109,12 +109,76 @@ const statObserver = new IntersectionObserver(
 
 statEls.forEach((el) => statObserver.observe(el));
 
-// Contact form (placeholder submit handler — wire up to a real backend/service before launch)
+// Contact form
 const quoteForm = document.getElementById('quoteForm');
+const formStatus = document.getElementById('formStatus');
+
+// Ideal start/finish date dropdowns: "Flexible" plus the next 18 months.
+function populateDateSelect(select) {
+  const flexible = document.createElement('option');
+  flexible.value = 'Flexible / not sure yet';
+  flexible.textContent = 'Flexible / not sure yet';
+  select.appendChild(flexible);
+
+  const monthFormatter = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' });
+  const now = new Date();
+
+  for (let i = 0; i < 18; i++) {
+    const optionDate = new Date(now.getFullYear(), now.getMonth() + i, 1);
+    const label = monthFormatter.format(optionDate);
+    const option = document.createElement('option');
+    option.value = label;
+    option.textContent = label;
+    select.appendChild(option);
+  }
+}
+
+[document.getElementById('startDate'), document.getElementById('finishDate')].forEach(populateDateSelect);
+
+function setFormStatus(message, kind) {
+  formStatus.textContent = message;
+  formStatus.className = `form-status ${kind ? `form-status-${kind}` : ''}`;
+}
 
 quoteForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  alert('This form is a placeholder. Connect it to email, Formspree, or your CRM to start receiving real requests.');
+
+  if (quoteForm.action.includes('YOUR_FORM_ID')) {
+    setFormStatus('This form isn’t connected yet — please call or email us directly for now.', 'error');
+    return;
+  }
+
+  const emailValue = document.getElementById('email').value;
+  document.getElementById('formReplyTo').value = emailValue;
+  document.getElementById('formCc').value = document.getElementById('sendCopy').checked ? emailValue : '';
+
+  const referenceId = `SHB-${Date.now().toString(36).toUpperCase()}`;
+  document.getElementById('formReferenceId').value = referenceId;
+  document.getElementById('formSubject').value = `[WEB QUOTE REQUEST] ${document.getElementById('name').value} — ${referenceId}`;
+
+  const submitBtn = quoteForm.querySelector('.form-submit');
+  submitBtn.disabled = true;
+  setFormStatus('Sending…', null);
+
+  fetch(quoteForm.action, {
+    method: 'POST',
+    body: new FormData(quoteForm),
+    headers: { Accept: 'application/json' },
+  })
+    .then((response) => {
+      if (response.ok) {
+        quoteForm.reset();
+        setFormStatus('Thanks — your request has been sent. We’ll be in touch soon.', 'success');
+      } else {
+        setFormStatus('Something went wrong sending your request — please call or email us directly.', 'error');
+      }
+    })
+    .catch(() => {
+      setFormStatus('Something went wrong sending your request — please call or email us directly.', 'error');
+    })
+    .finally(() => {
+      submitBtn.disabled = false;
+    });
 });
 
 // Project gallery + modal

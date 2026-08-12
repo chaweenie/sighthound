@@ -258,41 +258,85 @@
 
         <ul class="contact-details">
           <li><img class="contact-icon" src="images/icons/orange_phone.png" alt=""><strong>Phone:</strong> <a href="tel:+16043064447">(604) 306-4447</a></li>
-          <li><img class="contact-icon" src="images/icons/orange_email.png" alt=""><strong>Email:</strong> <a href="mailto:quotes@sighthoundbuilders.ca">quotes@sighthoundbuilders.ca</a></li>
+          <li><img class="contact-icon" src="images/icons/orange_email.png" alt=""><strong>Email:</strong> <a href="mailto:derrick@sighthoundbuilders.ca">derrick@sighthoundbuilders.ca</a></li>
           <li><img class="contact-icon" src="images/icons/orange_location.png" alt=""><strong>Service Area:</strong> Lower Mainland, based in Burnaby</li>
         </ul>
       </div>
 
-      <form class="contact-form reveal" id="quoteForm">
-        <div class="form-row">
-          <label for="name">Name</label>
-          <input type="text" id="name" name="name" required>
-        </div>
-        <div class="form-row form-row-split">
-          <div>
-            <label for="phone">Phone</label>
-            <input type="tel" id="phone" name="phone" required>
+      <!--
+        TODO before launch: this posts to a placeholder Formspree endpoint.
+        1. Sign up at formspree.io using derrick@sighthoundbuilders.ca
+        2. Create a form, copy the ID from the URL Formspree gives you
+           (looks like https://formspree.io/f/abcdwxyz)
+        3. Replace YOUR_FORM_ID in the action attribute below with it
+        Every submission's subject is tagged "[WEB QUOTE REQUEST]" — in
+        Gmail: Settings > Filters and Blocked Addresses > Create a new
+        filter > Subject contains [WEB QUOTE REQUEST] > apply a label
+        (and optionally skip the inbox) to keep these organized separately.
+      -->
+      <form class="contact-form reveal" id="quoteForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <input type="hidden" name="_subject" id="formSubject" value="[WEB QUOTE REQUEST] New quote request">
+        <input type="hidden" name="_replyto" id="formReplyTo">
+        <input type="hidden" name="_cc" id="formCc">
+        <input type="hidden" name="referenceId" id="formReferenceId">
+        <input type="hidden" name="source" value="sighthound-website">
+
+        <div class="form-section">
+          <p class="form-section-title">Your Details</p>
+          <div class="form-row">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required autocomplete="name">
           </div>
-          <div>
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required>
+          <div class="form-row form-row-split">
+            <div>
+              <label for="phone">Phone</label>
+              <input type="tel" id="phone" name="phone" required autocomplete="tel">
+            </div>
+            <div>
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required autocomplete="email">
+            </div>
+          </div>
+          <div class="form-row">
+            <label for="location">Location</label>
+            <input type="text" id="location" name="location" placeholder="City or neighbourhood" required autocomplete="address-level2">
           </div>
         </div>
-        <div class="form-row">
-          <label for="projectType">Project Type</label>
-          <select id="projectType" name="projectType">
-            <option>Renovation / Addition</option>
-            <option>Kitchen / Bath Remodel</option>
-            <option>Handyman / Repair</option>
-            <option>Other</option>
-          </select>
+
+        <div class="form-section">
+          <p class="form-section-title">Project Details</p>
+          <div class="form-row">
+            <label for="projectType">Project Type</label>
+            <select id="projectType" name="projectType">
+              <option>Renovation / Addition</option>
+              <option>Kitchen / Bath Remodel</option>
+              <option>Handyman / Repair</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-row form-row-split">
+            <div>
+              <label for="startDate">Ideal Start Date</label>
+              <select id="startDate" name="startDate"></select>
+            </div>
+            <div>
+              <label for="finishDate">Ideal Finish Date</label>
+              <select id="finishDate" name="finishDate"></select>
+            </div>
+          </div>
+          <div class="form-row">
+            <label for="message">Tell us about your project</label>
+            <textarea id="message" name="message" rows="4" required></textarea>
+          </div>
         </div>
-        <div class="form-row">
-          <label for="message">Tell us about your project</label>
-          <textarea id="message" name="message" rows="4"></textarea>
-        </div>
+
+        <label class="form-checkbox">
+          <input type="checkbox" id="sendCopy" name="sendCopy">
+          <span>Send me a copy of my response</span>
+        </label>
+
         <button type="submit" class="btn btn-primary btn-lg form-submit">Send Request <img src="images/icons/darkgreen_send.png" alt="" class="btn-icon"></button>
-        <p class="form-note">This form doesn't send anywhere yet — connect it to email, a form service (e.g. Formspree), or your CRM before launch.</p>
+        <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
       </form>
     </section>
 
