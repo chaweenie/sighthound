@@ -186,6 +186,7 @@ const CATEGORY_CLASS = { home: 'residential', apartment: 'residential', commerci
 const SCOPE_LABEL = { renovation: 'Renovation', build: 'New Build' };
 
 const galleryGrid = document.getElementById('galleryGrid');
+const galleryScroll = document.getElementById('galleryScroll');
 const galleryFilters = document.getElementById('galleryFilters');
 
 // Images with "before"/"after" in the filename are paired into one before/after
@@ -229,8 +230,35 @@ function coverImagePath(project) {
   return imagePath(project, firstSlide.type === 'before-after' ? firstSlide.after : firstSlide.src);
 }
 
+function buildCard(project) {
+  const card = document.createElement('button');
+  card.type = 'button';
+  card.className = 'project-card';
+  card.setAttribute('aria-label', `View photos and details for ${project.title}`);
+  card.innerHTML = `
+    <img class="project-card-img" src="${coverImagePath(project)}" alt="" loading="lazy">
+    <span class="project-badge project-card-badge project-badge-${CATEGORY_CLASS[project.type]}">${CATEGORY_LABEL[project.type]}</span>
+    <span class="project-card-overlay">
+      <span class="project-card-title">${project.title}</span>
+      <span class="project-card-meta">
+        <span class="project-card-year">${project.year}</span>
+        <span class="project-card-scope">${SCOPE_LABEL[project.scope]}</span>
+      </span>
+    </span>
+  `;
+  card.addEventListener('click', () => {
+    if (galleryMarquee.suppressNextClick) {
+      galleryMarquee.suppressNextClick = false;
+      return;
+    }
+    openProjectModal(project);
+  });
+  return card;
+}
+
 function renderGallery(filter) {
   galleryGrid.innerHTML = '';
+  galleryMarquee.stop();
 
   const filtered = (typeof PROJECTS !== 'undefined' ? PROJECTS : []).filter((project) => {
     if (filter === 'all') return true;
@@ -239,30 +267,31 @@ function renderGallery(filter) {
 
   if (filtered.length === 0) {
     galleryGrid.innerHTML = '<p class="gallery-empty">No projects in this category yet.</p>';
+    galleryScroll.classList.add('is-static');
     return;
   }
 
-  filtered.forEach((project) => {
-    const card = document.createElement('button');
-    card.type = 'button';
-    card.className = 'project-card reveal';
-    card.setAttribute('aria-label', `View photos and details for ${project.title}`);
-    card.innerHTML = `
-      <img class="project-card-img" src="${coverImagePath(project)}" alt="" loading="lazy">
-      <span class="project-badge project-card-badge project-badge-${CATEGORY_CLASS[project.type]}">${CATEGORY_LABEL[project.type]}</span>
-      <span class="project-card-overlay">
-        <span class="project-card-title">${project.title}</span>
-        <span class="project-card-meta">
-          <span class="project-card-year">${project.year}</span>
-          <span class="project-card-scope">${SCOPE_LABEL[project.scope]}</span>
-        </span>
-      </span>
-    `;
-    card.addEventListener('click', () => openProjectModal(project));
-    galleryGrid.appendChild(card);
-  });
+  // Render one copy first to measure whether it already fills the viewport.
+  filtered.forEach((project) => galleryGrid.appendChild(buildCard(project)));
 
-  galleryGrid.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
+  const fitsWithoutScrolling = galleryGrid.scrollWidth <= galleryScroll.clientWidth + 1;
+
+  if (fitsWithoutScrolling) {
+    galleryScroll.classList.add('is-static');
+    return;
+  }
+
+  galleryScroll.classList.remove('is-static');
+  const singleSetWidth = galleryGrid.scrollWidth;
+
+  // Triple the set so there's a full copy of slack on either side of the
+  // visible one — auto-scroll and manual dragging can wrap seamlessly
+  // between identical copies without ever visibly running out of track.
+  filtered.forEach((project) => galleryGrid.appendChild(buildCard(project)));
+  filtered.forEach((project) => galleryGrid.appendChild(buildCard(project)));
+
+  galleryScroll.scrollLeft = singleSetWidth;
+  galleryMarquee.start(singleSetWidth);
 }
 
 if (galleryFilters) {
@@ -275,8 +304,138 @@ if (galleryFilters) {
   });
 }
 
+// Slow linear auto-scroll that yields to the visitor: grabbing the strip
+// (mouse drag, touch, or wheel) decelerates the autoplay to a stop and hands
+// over full control, then it eases back up to speed once they let go.
+const galleryMarquee = (() => {
+  const MAX_SPEED = 0.35; // px per frame
+  const ACCEL = 0.006;
+  const DECEL = 0.03;
+  const CLICK_THRESHOLD = 6; // px of movement before a mousedown counts as a drag
+
+  let singleSetWidth = 0;
+  let isLooping = false;
+  let isInteracting = false;
+  let currentSpeed = 0;
+  // scrollLeft rounds to the nearest pixel on read/write in most browsers, so
+  // accumulating a sub-pixel speed by reading it back each frame would just
+  // discard the fractional part forever. Track our own float position instead
+  // and only use it to drive scrollLeft while auto-scrolling.
+  let scrollPosition = 0;
+  let rafId = null;
+  let wheelIdleTimer = null;
+
+  let isDragging = false;
+  let dragStartX = 0;
+  let dragStartScrollLeft = 0;
+  let dragMoved = 0;
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function tick() {
+    if (isLooping) {
+      if (isInteracting || prefersReducedMotion) {
+        currentSpeed = Math.max(0, currentSpeed - DECEL);
+      } else {
+        currentSpeed = Math.min(MAX_SPEED, currentSpeed + ACCEL);
+        scrollPosition += currentSpeed;
+        galleryScroll.scrollLeft = scrollPosition;
+      }
+    }
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function handleScroll() {
+    if (!isLooping) return;
+    if (galleryScroll.scrollLeft <= singleSetWidth * 0.4) {
+      galleryScroll.scrollLeft += singleSetWidth;
+      scrollPosition += singleSetWidth;
+      if (isDragging) dragStartScrollLeft += singleSetWidth;
+    } else if (galleryScroll.scrollLeft >= singleSetWidth * 1.6) {
+      galleryScroll.scrollLeft -= singleSetWidth;
+      scrollPosition -= singleSetWidth;
+      if (isDragging) dragStartScrollLeft -= singleSetWidth;
+    }
+  }
+
+  function interactionStart() {
+    isInteracting = true;
+  }
+
+  function interactionEnd() {
+    isInteracting = false;
+    // Pick auto-scroll back up from wherever the visitor left it.
+    scrollPosition = galleryScroll.scrollLeft;
+  }
+
+  function onMouseDown(e) {
+    if (e.button !== 0) return;
+    isDragging = true;
+    dragMoved = 0;
+    dragStartX = e.pageX;
+    dragStartScrollLeft = galleryScroll.scrollLeft;
+    interactionStart();
+    galleryScroll.classList.add('is-dragging');
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+  }
+
+  function onMouseMove(e) {
+    if (!isDragging) return;
+    const delta = e.pageX - dragStartX;
+    galleryScroll.scrollLeft = dragStartScrollLeft - delta;
+    dragMoved = Math.max(dragMoved, Math.abs(delta));
+  }
+
+  function onMouseUp() {
+    isDragging = false;
+    galleryScroll.classList.remove('is-dragging');
+    window.removeEventListener('mousemove', onMouseMove);
+    window.removeEventListener('mouseup', onMouseUp);
+    if (dragMoved > CLICK_THRESHOLD) galleryMarquee.suppressNextClick = true;
+    interactionEnd();
+  }
+
+  function onWheel() {
+    interactionStart();
+    clearTimeout(wheelIdleTimer);
+    wheelIdleTimer = setTimeout(interactionEnd, 150);
+  }
+
+  galleryScroll.addEventListener('mousedown', onMouseDown);
+  galleryScroll.addEventListener('touchstart', interactionStart, { passive: true });
+  galleryScroll.addEventListener('touchend', interactionEnd);
+  galleryScroll.addEventListener('touchcancel', interactionEnd);
+  galleryScroll.addEventListener('wheel', onWheel, { passive: true });
+  galleryScroll.addEventListener('scroll', handleScroll);
+  rafId = requestAnimationFrame(tick);
+
+  return {
+    suppressNextClick: false,
+    start(width) {
+      singleSetWidth = width;
+      isLooping = true;
+      currentSpeed = 0;
+      scrollPosition = galleryScroll.scrollLeft;
+    },
+    stop() {
+      isLooping = false;
+      currentSpeed = 0;
+    },
+  };
+})();
+
 if (galleryGrid) {
   renderGallery('all');
+
+  let galleryResizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(galleryResizeTimer);
+    galleryResizeTimer = setTimeout(() => {
+      const activeFilter = galleryFilters.querySelector('.filter-btn.active');
+      renderGallery(activeFilter ? activeFilter.dataset.filter : 'all');
+    }, 300);
+  });
 }
 
 // Project modal (image carousel + details)
