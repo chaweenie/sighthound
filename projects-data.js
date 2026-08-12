@@ -80,7 +80,7 @@ const PROJECTS = [
     year: 2023,
     type: 'apartment',
     scope: 'renovation',
-    description: "Custom laundry closet shelving for better organization, fresh paint in the bedroom and future nursery, and added shelving to make use of dead space in the bathroom — small changes that made the whole apartment feel more functional.",
+    description: "Custom laundry closet shelving for better organization, fresh paint in the bedroom and future nursery, and added shelving to make use of dead space in the bathroom — small changes that made the whole apartment feel more functional and modern.",
     folder: 'images/projects/2023/Charland',
     images: ['before.jpeg', 'IMG_3105.jpeg', 'IMG_4392.jpeg', 'IMG_7095.jpeg', 'after.jpeg'],
   },
