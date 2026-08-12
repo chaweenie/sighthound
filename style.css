@@ -354,6 +354,110 @@ html.is-loading { overflow: hidden; }
 
 .btn-lg { padding: 0.9rem 1.9rem; font-size: 1rem; }
 
+/* ---------- Disclaimer tooltip ---------- */
+/* Groups a CTA button with its disclaimer asterisk so the two move together
+   inside a flex row, without inheriting the row's larger item gap. */
+.btn-with-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.disclaimer {
+  position: relative;
+  display: inline-flex;
+  align-items: flex-start;
+}
+
+.disclaimer-trigger {
+  background: none;
+  border: none;
+  padding: 0.15em 0.2em;
+  margin: 0;
+  font: inherit;
+  font-size: 0.75em;
+  line-height: 1;
+  color: inherit;
+  opacity: 0.7;
+  cursor: help;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.disclaimer-trigger:hover,
+.disclaimer-trigger:focus-visible {
+  opacity: 1;
+}
+
+.disclaimer-tip {
+  position: absolute;
+  bottom: calc(100% + 0.6rem);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  width: max-content;
+  max-width: 240px;
+  background: var(--navy-deep);
+  color: var(--ink);
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 400;
+  line-height: 1.4;
+  text-align: left;
+  text-transform: none;
+  letter-spacing: normal;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+  z-index: 50;
+}
+
+.disclaimer-tip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--navy-deep);
+}
+
+/* The header sits at the very top of the page with no room above it, and its
+   trigger sits near the right edge — flip the tip below and right-anchor it. */
+.header-actions .disclaimer-tip {
+  top: calc(100% + 0.6rem);
+  bottom: auto;
+  left: auto;
+  right: -0.4rem;
+  transform: translateY(-4px);
+}
+
+.header-actions .disclaimer-tip::after {
+  top: auto;
+  bottom: 100%;
+  left: auto;
+  right: 1rem;
+  border-top-color: transparent;
+  border-bottom-color: var(--navy-deep);
+}
+
+.header-actions .disclaimer-trigger:hover + .disclaimer-tip,
+.header-actions .disclaimer-trigger:focus + .disclaimer-tip {
+  transform: translateY(0);
+}
+
+/* Shown on mouse hover (desktop) and on focus — tapping the button focuses it
+   on both iOS and Android, so this also covers touch without extra JS. */
+.disclaimer-trigger:hover + .disclaimer-tip,
+.disclaimer-trigger:focus + .disclaimer-tip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
 /* ---------- Hero ---------- */
 .hero {
   position: relative;
@@ -665,11 +769,24 @@ html.is-loading { overflow: hidden; }
 .project-card-meta {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.6rem;
 }
 
 .project-card-year {
   color: rgba(255, 255, 255, 0.78);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.project-card-year::after {
+  content: '•';
+  margin-left: 0.6rem;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.project-card-scope {
+  color: rgba(255, 255, 255, 0.72);
   font-size: 0.8rem;
   font-weight: 600;
 }
@@ -776,11 +893,55 @@ html.modal-open { overflow: hidden; }
   overflow: hidden;
 }
 
+.project-modal-slide {
+  width: 100%;
+  height: 100%;
+}
+
 .project-modal-image {
   width: 100%;
   height: 100%;
   object-fit: contain;
   background: var(--navy-deep);
+}
+
+.before-after-slide {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.before-after-slide figure {
+  position: relative;
+  flex: 1 1 50%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+.before-after-slide figure:first-child {
+  border-right: 2px solid var(--navy-deep);
+}
+
+.before-after-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.before-after-slide figcaption {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  background: rgba(10, 14, 9, 0.65);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
 }
 
 .carousel-arrow {
@@ -840,10 +1001,23 @@ html.modal-open { overflow: hidden; }
 .project-modal-heading h3 {
   margin: 0;
   font-size: 1.4rem;
+  flex-basis: 100%;
 }
 
 .project-modal-year {
   color: var(--ink-faint);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.project-modal-year::after {
+  content: '•';
+  margin-left: 0.65rem;
+  color: var(--ink-faint);
+}
+
+.project-modal-scope {
+  color: var(--ink-soft);
   font-weight: 600;
   font-size: 0.9rem;
 }
@@ -855,33 +1029,6 @@ html.modal-open { overflow: hidden; }
 
 .project-modal-desc p:last-child {
   margin-bottom: 0;
-}
-
-/* ---------- Testimonials ---------- */
-.testimonials-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-}
-
-.testimonial-card {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 1.75rem;
-  box-shadow: var(--shadow-sm);
-}
-
-.testimonial-card p {
-  color: var(--ink);
-  margin-bottom: 1rem;
-}
-
-.testimonial-card cite {
-  font-style: normal;
-  font-weight: 700;
-  font-size: 0.85rem;
-  color: var(--ink-faint);
 }
 
 @media (max-width: 900px) {
@@ -925,7 +1072,12 @@ html.modal-open { overflow: hidden; }
   }
 
   .header-phone,
-  .btn {
+  .btn-with-note {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .btn-with-note .btn {
     flex: 1 1 auto;
     min-width: 0;
   }
@@ -960,7 +1112,6 @@ html.modal-open { overflow: hidden; }
 
   .services-grid,
   .gallery-grid,
-  .testimonials-grid,
   .about,
   .contact {
     gap: 1rem;
@@ -988,6 +1139,15 @@ html.modal-open { overflow: hidden; }
 }
 
 @media (max-width: 600px) {
+  .before-after-slide {
+    flex-direction: column;
+  }
+
+  .before-after-slide figure:first-child {
+    border-right: none;
+    border-bottom: 2px solid var(--navy-deep);
+  }
+
   .header-inner {
     padding: 0 1rem;
   }
@@ -1014,7 +1174,6 @@ html.modal-open { overflow: hidden; }
 
   .about-media,
   .project-card,
-  .testimonial-card,
   .service-card,
   .contact-form {
     border-radius: 1rem;
@@ -1023,13 +1182,6 @@ html.modal-open { overflow: hidden; }
   .section-heading {
     margin-bottom: 2rem;
   }
-}
-
-.testimonial-card cite {
-  font-style: normal;
-  font-weight: 700;
-  font-size: 0.85rem;
-  color: var(--ink-faint);
 }
 
 /* ---------- About ---------- */
@@ -1240,9 +1392,6 @@ input:focus, select:focus, textarea:focus {
 .gallery-grid .reveal:nth-child(5) { transition-delay: 0.24s; }
 .gallery-grid .reveal:nth-child(6) { transition-delay: 0.3s; }
 
-.testimonials-grid .reveal:nth-child(2) { transition-delay: 0.1s; }
-.testimonials-grid .reveal:nth-child(3) { transition-delay: 0.2s; }
-
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; transition: none; }
@@ -1283,7 +1432,7 @@ input:focus, select:focus, textarea:focus {
   .main-nav a { padding: 0.7rem 0; border-bottom: 1px solid var(--line); }
 
   .header-phone { display: none; }
-  .header-actions .btn-primary { display: none; }
+  .header-actions .btn-with-note { display: none; }
   .nav-toggle { display: flex; }
 
   .brand-logo {
@@ -1302,5 +1451,7 @@ input:focus, select:focus, textarea:focus {
 @media (max-width: 560px) {
   .trust-bar { grid-template-columns: 1fr; }
   .hero-ctas { flex-direction: column; width: 100%; }
-  .hero-ctas .btn { width: 100%; }
+  .hero-ctas .btn-with-note { width: 100%; }
+  .hero-ctas .btn-with-note .btn { flex: 1 1 auto; }
+  .hero-ctas .btn-ghost { width: 100%; }
 }

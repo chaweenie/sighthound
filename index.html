@@ -42,14 +42,19 @@
         <a href="#services">Services</a>
         <a href="#process">Process</a>
         <a href="#gallery">Gallery</a>
-        <a href="#testimonials">Reviews</a>
         <a href="#about">About</a>
         <a href="#contact">Contact</a>
       </nav>
 
       <div class="header-actions">
         <a href="tel:+16043064447" class="header-phone">(604) 306-4447</a>
-        <a href="#contact" class="btn btn-primary">Get a Free Quote</a>
+        <span class="btn-with-note">
+          <a href="#contact" class="btn btn-primary">Get a Free Quote</a>
+          <span class="disclaimer">
+            <button type="button" class="disclaimer-trigger" aria-label="Quote disclaimer: Projects over $10,000 will have a $150 quotation charge, applied toward the project upon client approval.">*</button>
+            <span class="disclaimer-tip" role="tooltip" aria-hidden="true">Projects over $10,000 will have a $150 quotation charge, applied toward the project upon client approval.</span>
+          </span>
+        </span>
         <button id="navToggle" class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>
@@ -69,7 +74,13 @@
           across the Lower Mainland — with clear communication from the first estimate to the final walkthrough.
         </p>
         <div class="hero-ctas">
-          <a href="#contact" class="btn btn-primary btn-lg">Request a Free Estimate</a>
+          <span class="btn-with-note">
+            <a href="#contact" class="btn btn-primary btn-lg">Request a Free Estimate</a>
+            <span class="disclaimer">
+              <button type="button" class="disclaimer-trigger" aria-label="Quote disclaimer: Projects over $10,000 will have a $150 quotation charge, applied toward the project upon client approval.">*</button>
+              <span class="disclaimer-tip" role="tooltip" aria-hidden="true">Projects over $10,000 will have a $150 quotation charge, applied toward the project upon client approval.</span>
+            </span>
+          </span>
           <a href="tel:+16043064447" class="btn btn-ghost btn-lg">Call (604) 306-4447</a>
         </div>
       </div>
@@ -139,7 +150,7 @@
         <li class="process-step reveal">
           <span class="step-number">01</span>
           <div>
-            <h3>Free consultation &amp; estimate</h3>
+            <h3>Free consultation &amp; estimate<span class="disclaimer"><button type="button" class="disclaimer-trigger" aria-label="Quote disclaimer: Projects over $10,000 will have a $150 quotation charge, applied toward the project upon client approval.">*</button><span class="disclaimer-tip" role="tooltip" aria-hidden="true">Projects over $10,000 will have a $150 quotation charge, applied toward the project upon client approval.</span></span></h3>
             <p>We walk the site, talk through your goals and budget, and follow up with a written estimate.</p>
           </div>
         </li>
@@ -190,7 +201,7 @@
 
         <div class="project-modal-carousel">
           <button type="button" class="carousel-arrow carousel-prev" id="carouselPrev" aria-label="Previous photo">&#8249;</button>
-          <img id="projectModalImage" class="project-modal-image" src="" alt="">
+          <div class="project-modal-slide" id="projectModalSlide"></div>
           <button type="button" class="carousel-arrow carousel-next" id="carouselNext" aria-label="Next photo">&#8250;</button>
           <span class="carousel-counter" id="carouselCounter"></span>
         </div>
@@ -199,6 +210,7 @@
           <div class="project-modal-heading">
             <h3 id="projectModalTitle"></h3>
             <span class="project-modal-year" id="projectModalYear"></span>
+            <span class="project-modal-scope" id="projectModalScope"></span>
             <span class="project-badge" id="projectModalBadge"></span>
           </div>
           <div class="project-modal-desc" id="projectModalDesc"></div>
@@ -206,57 +218,42 @@
       </div>
     </div>
 
-    <section id="testimonials" class="testimonials section-band">
-      <div class="section-heading">
-        <p class="eyebrow">Client Reviews</p>
-        <h2>What people say after we leave</h2>
-      </div>
-
-      <div class="testimonials-grid">
-        <blockquote class="testimonial-card reveal">
-          <p>"[Placeholder quote — swap in a real client review once you have one.] They kept us updated every step and the addition looks like it was always part of the house."</p>
-          <cite>— Client Name, City</cite>
-        </blockquote>
-        <blockquote class="testimonial-card reveal">
-          <p>"[Placeholder quote.] On budget, on time, and cleaned up the site every single day. Would hire again without hesitation."</p>
-          <cite>— Client Name, City</cite>
-        </blockquote>
-        <blockquote class="testimonial-card reveal">
-          <p>"[Placeholder quote.] Clear communication from the first call to the final walkthrough. No surprise costs."</p>
-          <cite>— Client Name, City</cite>
-        </blockquote>
-      </div>
-    </section>
-
     <section id="about" class="about">
       <div class="about-media reveal">
-        <img src="images/about_me/aboutme_02.jpg" alt="Sighthound Builders' founder outdoors with his greyhound, the inspiration for the company name">
+        <img src="images/about_me/aboutme_02.jpg" alt="Derrick, founder of Sighthound Builders, outdoors with his greyhound — the inspiration for the company name">
       </div>
       <div class="about-copy reveal">
-        <p class="eyebrow">About Us</p>
-        <h2>Hands-on, local, and easy to reach</h2>
+        <p class="eyebrow">About</p>
+        <h2>Hi, I'm Derrick</h2>
         <p>
-          Sighthound Builders is a general contracting company based in Burnaby, serving
-          the Lower Mainland. With 15+ years of trade experience, our founder has built a reputation
-          on fulfilling all project needs.
+          I'm an independent contractor based in Vancouver, working with residential and commercial
+          clients on renovations, repairs, and custom projects. I believe every job deserves honest,
+          clear communication and work built to stand the test of time — hiring a contractor is about
+          trust as much as it's about the job, and I take that seriously.
         </p>
         <p>
-          We thrive on communication: every project starts with a clear, shared goal between us and
-          the client, and no job is too big or too small. If there's ever a service we can't provide
-          directly, we'll point you toward someone who can.
+          Whether it's a home renovation, a handful of repairs, or a commercial space update, I'm happy
+          to talk through ideas and help find a solution that fits your project and budget. Outside of
+          work, you'll usually find me skiing or out adventuring with my dog.
         </p>
         <ul class="about-list">
-          <li>Insured, with 15+ years of hands-on trade experience</li>
-          <li>Free, no-obligation estimates</li>
-          <li>Direct communication with your contractor, not a call center</li>
+          <li>15+ years of hands-on trade experience, licensed &amp; insured</li>
+          <li>Free, no-obligation estimates<span class="disclaimer"><button type="button" class="disclaimer-trigger" aria-label="Quote disclaimer: Projects over $10,000 will have a $150 quotation charge, applied toward the project upon client approval.">*</button><span class="disclaimer-tip" role="tooltip" aria-hidden="true">Projects over $10,000 will have a $150 quotation charge, applied toward the project upon client approval.</span></span></li>
+          <li>You'll be working directly with me from quote to walkthrough — not a call center</li>
         </ul>
       </div>
     </section>
 
     <section class="cta-banner reveal">
       <h2>Ready to start your project?</h2>
-      <p>Get a free, no-obligation estimate — most requests get a response within one business day.</p>
-      <a href="#contact" class="btn btn-primary btn-lg">Request a Free Estimate</a>
+      <p>Get a free, no-obligation estimate<span class="disclaimer"><button type="button" class="disclaimer-trigger" aria-label="Quote disclaimer: Projects over $10,000 will have a $150 quotation charge, applied toward the project upon client approval.">*</button><span class="disclaimer-tip" role="tooltip" aria-hidden="true">Projects over $10,000 will have a $150 quotation charge, applied toward the project upon client approval.</span></span> — most requests get a response within one business day.</p>
+      <span class="btn-with-note">
+        <a href="#contact" class="btn btn-primary btn-lg">Request a Free Estimate</a>
+        <span class="disclaimer">
+          <button type="button" class="disclaimer-trigger" aria-label="Quote disclaimer: Projects over $10,000 will have a $150 quotation charge, applied toward the project upon client approval.">*</button>
+          <span class="disclaimer-tip" role="tooltip" aria-hidden="true">Projects over $10,000 will have a $150 quotation charge, applied toward the project upon client approval.</span>
+        </span>
+      </span>
     </section>
 
     <section id="contact" class="contact">

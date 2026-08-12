@@ -118,14 +118,52 @@ quoteForm.addEventListener('submit', (e) => {
 });
 
 // Project gallery + modal
-const CATEGORY_LABEL = { home: 'Residential', apartment: 'Residential', commercial: 'Commercial' };
+const CATEGORY_LABEL = { home: 'Home', apartment: 'Apartment', commercial: 'Commercial' };
 const CATEGORY_CLASS = { home: 'residential', apartment: 'residential', commercial: 'commercial' };
+const SCOPE_LABEL = { renovation: 'Renovation', build: 'New Build' };
 
 const galleryGrid = document.getElementById('galleryGrid');
 const galleryFilters = document.getElementById('galleryFilters');
 
-function projectImagePath(project, index) {
-  return `${project.folder}/${project.images[index]}`;
+// Images with "before"/"after" in the filename are paired into one before/after
+// slide instead of appearing as separate carousel photos.
+function buildSlides(images) {
+  const used = new Array(images.length).fill(false);
+  const slides = [];
+
+  images.forEach((image, i) => {
+    if (used[i]) return;
+    const name = image.toLowerCase();
+
+    if (name.includes('before')) {
+      const afterIndex = images.findIndex((img, j) => !used[j] && img.toLowerCase().includes('after'));
+      if (afterIndex !== -1) {
+        slides.push({ type: 'before-after', before: image, after: images[afterIndex] });
+        used[i] = true;
+        used[afterIndex] = true;
+        return;
+      }
+    }
+
+    slides.push({ type: 'single', src: image });
+    used[i] = true;
+  });
+
+  return slides;
+}
+
+function getSlides(project) {
+  if (!project.slides) project.slides = buildSlides(project.images);
+  return project.slides;
+}
+
+function imagePath(project, filename) {
+  return `${project.folder}/${filename}`;
+}
+
+function coverImagePath(project) {
+  const firstSlide = getSlides(project)[0];
+  return imagePath(project, firstSlide.type === 'before-after' ? firstSlide.after : firstSlide.src);
 }
 
 function renderGallery(filter) {
@@ -147,11 +185,12 @@ function renderGallery(filter) {
     card.className = 'project-card reveal';
     card.setAttribute('aria-label', `View photos and details for ${project.title}`);
     card.innerHTML = `
-      <img class="project-card-img" src="${projectImagePath(project, 0)}" alt="" loading="lazy">
+      <img class="project-card-img" src="${coverImagePath(project)}" alt="" loading="lazy">
       <span class="project-card-overlay">
         <span class="project-card-title">${project.title}</span>
         <span class="project-card-meta">
           <span class="project-card-year">${project.year}</span>
+          <span class="project-card-scope">${SCOPE_LABEL[project.scope]}</span>
           <span class="project-badge project-badge-${CATEGORY_CLASS[project.type]}">${CATEGORY_LABEL[project.type]}</span>
         </span>
       </span>
@@ -179,9 +218,10 @@ if (galleryGrid) {
 
 // Project modal (image carousel + details)
 const projectModal = document.getElementById('projectModal');
-const projectModalImage = document.getElementById('projectModalImage');
+const projectModalSlide = document.getElementById('projectModalSlide');
 const projectModalTitle = document.getElementById('projectModalTitle');
 const projectModalYear = document.getElementById('projectModalYear');
+const projectModalScope = document.getElementById('projectModalScope');
 const projectModalBadge = document.getElementById('projectModalBadge');
 const projectModalDesc = document.getElementById('projectModalDesc');
 const carouselPrev = document.getElementById('carouselPrev');
@@ -189,18 +229,35 @@ const carouselNext = document.getElementById('carouselNext');
 const carouselCounter = document.getElementById('carouselCounter');
 
 let activeProject = null;
-let activeImageIndex = 0;
+let activeSlideIndex = 0;
 let lastFocusedEl = null;
 
-function renderModalImage() {
-  projectModalImage.src = projectImagePath(activeProject, activeImageIndex);
-  projectModalImage.alt = `${activeProject.title} — photo ${activeImageIndex + 1} of ${activeProject.images.length}`;
+function renderModalSlide() {
+  const slides = getSlides(activeProject);
+  const slide = slides[activeSlideIndex];
 
-  const hasMultiple = activeProject.images.length > 1;
+  if (slide.type === 'before-after') {
+    projectModalSlide.innerHTML = `
+      <div class="before-after-slide">
+        <figure>
+          <img src="${imagePath(activeProject, slide.before)}" alt="Before">
+          <figcaption>Before</figcaption>
+        </figure>
+        <figure>
+          <img src="${imagePath(activeProject, slide.after)}" alt="After">
+          <figcaption>After</figcaption>
+        </figure>
+      </div>
+    `;
+  } else {
+    projectModalSlide.innerHTML = `<img class="project-modal-image" src="${imagePath(activeProject, slide.src)}" alt="Project photo">`;
+  }
+
+  const hasMultiple = slides.length > 1;
   carouselPrev.hidden = !hasMultiple;
   carouselNext.hidden = !hasMultiple;
   carouselCounter.hidden = !hasMultiple;
-  carouselCounter.textContent = `${activeImageIndex + 1} / ${activeProject.images.length}`;
+  carouselCounter.textContent = `${activeSlideIndex + 1} / ${slides.length}`;
 }
 
 function renderModalDescription(text) {
@@ -212,15 +269,16 @@ function renderModalDescription(text) {
 
 function openProjectModal(project) {
   activeProject = project;
-  activeImageIndex = 0;
+  activeSlideIndex = 0;
   lastFocusedEl = document.activeElement;
 
   projectModalTitle.textContent = project.title;
   projectModalYear.textContent = project.year;
+  projectModalScope.textContent = SCOPE_LABEL[project.scope];
   projectModalBadge.textContent = CATEGORY_LABEL[project.type];
   projectModalBadge.className = `project-badge project-badge-${CATEGORY_CLASS[project.type]}`;
   renderModalDescription(project.description);
-  renderModalImage();
+  renderModalSlide();
 
   projectModal.classList.add('is-open');
   projectModal.setAttribute('aria-hidden', 'false');
@@ -238,14 +296,16 @@ function closeProjectModal() {
 
 function showPrevImage() {
   if (!activeProject) return;
-  activeImageIndex = (activeImageIndex - 1 + activeProject.images.length) % activeProject.images.length;
-  renderModalImage();
+  const slides = getSlides(activeProject);
+  activeSlideIndex = (activeSlideIndex - 1 + slides.length) % slides.length;
+  renderModalSlide();
 }
 
 function showNextImage() {
   if (!activeProject) return;
-  activeImageIndex = (activeImageIndex + 1) % activeProject.images.length;
-  renderModalImage();
+  const slides = getSlides(activeProject);
+  activeSlideIndex = (activeSlideIndex + 1) % slides.length;
+  renderModalSlide();
 }
 
 document.getElementById('projectModalClose').addEventListener('click', closeProjectModal);
