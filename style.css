@@ -119,34 +119,18 @@ html.is-loading { overflow: hidden; }
 }
 
 .loader-track {
-  width: 200px;
-  height: 100px;
+  width: min(70vw, 360px);
   position: relative;
 }
 
-.loader-dog {
-  position: absolute;
-  top: 0;
-  left: 0;
+.loader-gif {
+  display: block;
   width: 100%;
-  height: 100%;
-}
-
-.loader-silhouette { fill: var(--amber); }
-
-.loader-pose {
-  animation-duration: 0.9s;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-}
-
-.loader-pose-a { animation-name: loaderPoseA; }
-.loader-pose-b { animation-name: loaderPoseB; }
-
-.loader-shadow {
-  fill: var(--green);
-  transform-origin: 120px 106px;
-  animation: loaderShadowPulse 0.9s ease-in-out infinite;
+  height: auto;
+  /* The GIF is baked on a solid black background; screen-blending it
+     drops the black out so it reads as transparent against the loader's
+     own (dark) background, without needing to re-encode the file. */
+  mix-blend-mode: screen;
 }
 
 .loader-text {
@@ -158,29 +142,10 @@ html.is-loading { overflow: hidden; }
   font-weight: 700;
 }
 
-@keyframes loaderPoseA {
-  0%, 38% { opacity: 1; }
-  50%, 88% { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-@keyframes loaderPoseB {
-  0%, 38% { opacity: 0; }
-  50%, 88% { opacity: 1; }
-  100% { opacity: 0; }
-}
-
-@keyframes loaderShadowPulse {
-  0%, 38% { opacity: 0.3; transform: scaleX(1); }
-  50%, 88% { opacity: 0.14; transform: scaleX(0.75); }
-  100% { opacity: 0.3; transform: scaleX(1); }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .loader-pose-a, .loader-pose-b, .loader-shadow {
-    animation: none;
+  .loader-gif {
+    display: none;
   }
-  .loader-pose-b { opacity: 0; }
 }
 
 /* ---------- Header ---------- */
