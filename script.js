@@ -59,8 +59,6 @@ mainNav.querySelectorAll('a').forEach((link) => {
 });
 
 // Scroll-reveal animations
-const revealEls = document.querySelectorAll('.reveal');
-
 const revealObserver = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
@@ -73,7 +71,7 @@ const revealObserver = new IntersectionObserver(
   { threshold: 0, rootMargin: '0px 0px -10% 0px' }
 );
 
-revealEls.forEach((el) => revealObserver.observe(el));
+document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
 
 // Animated stat counters
 const statEls = document.querySelectorAll('.stat-number');
@@ -117,6 +115,149 @@ const quoteForm = document.getElementById('quoteForm');
 quoteForm.addEventListener('submit', (e) => {
   e.preventDefault();
   alert('This form is a placeholder. Connect it to email, Formspree, or your CRM to start receiving real requests.');
+});
+
+// Project gallery + modal
+const CATEGORY_LABEL = { home: 'Residential', apartment: 'Residential', commercial: 'Commercial' };
+const CATEGORY_CLASS = { home: 'residential', apartment: 'residential', commercial: 'commercial' };
+
+const galleryGrid = document.getElementById('galleryGrid');
+const galleryFilters = document.getElementById('galleryFilters');
+
+function projectImagePath(project, index) {
+  return `${project.folder}/${project.images[index]}`;
+}
+
+function renderGallery(filter) {
+  galleryGrid.innerHTML = '';
+
+  const filtered = (typeof PROJECTS !== 'undefined' ? PROJECTS : []).filter((project) => {
+    if (filter === 'all') return true;
+    return CATEGORY_CLASS[project.type] === filter;
+  });
+
+  if (filtered.length === 0) {
+    galleryGrid.innerHTML = '<p class="gallery-empty">No projects in this category yet.</p>';
+    return;
+  }
+
+  filtered.forEach((project) => {
+    const card = document.createElement('button');
+    card.type = 'button';
+    card.className = 'project-card reveal';
+    card.setAttribute('aria-label', `View photos and details for ${project.title}`);
+    card.innerHTML = `
+      <img class="project-card-img" src="${projectImagePath(project, 0)}" alt="" loading="lazy">
+      <span class="project-card-overlay">
+        <span class="project-card-title">${project.title}</span>
+        <span class="project-card-meta">
+          <span class="project-card-year">${project.year}</span>
+          <span class="project-badge project-badge-${CATEGORY_CLASS[project.type]}">${CATEGORY_LABEL[project.type]}</span>
+        </span>
+      </span>
+    `;
+    card.addEventListener('click', () => openProjectModal(project));
+    galleryGrid.appendChild(card);
+  });
+
+  galleryGrid.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
+}
+
+if (galleryFilters) {
+  galleryFilters.addEventListener('click', (e) => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    galleryFilters.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderGallery(btn.dataset.filter);
+  });
+}
+
+if (galleryGrid) {
+  renderGallery('all');
+}
+
+// Project modal (image carousel + details)
+const projectModal = document.getElementById('projectModal');
+const projectModalImage = document.getElementById('projectModalImage');
+const projectModalTitle = document.getElementById('projectModalTitle');
+const projectModalYear = document.getElementById('projectModalYear');
+const projectModalBadge = document.getElementById('projectModalBadge');
+const projectModalDesc = document.getElementById('projectModalDesc');
+const carouselPrev = document.getElementById('carouselPrev');
+const carouselNext = document.getElementById('carouselNext');
+const carouselCounter = document.getElementById('carouselCounter');
+
+let activeProject = null;
+let activeImageIndex = 0;
+let lastFocusedEl = null;
+
+function renderModalImage() {
+  projectModalImage.src = projectImagePath(activeProject, activeImageIndex);
+  projectModalImage.alt = `${activeProject.title} — photo ${activeImageIndex + 1} of ${activeProject.images.length}`;
+
+  const hasMultiple = activeProject.images.length > 1;
+  carouselPrev.hidden = !hasMultiple;
+  carouselNext.hidden = !hasMultiple;
+  carouselCounter.hidden = !hasMultiple;
+  carouselCounter.textContent = `${activeImageIndex + 1} / ${activeProject.images.length}`;
+}
+
+function renderModalDescription(text) {
+  projectModalDesc.innerHTML = text
+    .split(/\n\s*\n/)
+    .map((para) => `<p>${para.replace(/\n/g, '<br>')}</p>`)
+    .join('');
+}
+
+function openProjectModal(project) {
+  activeProject = project;
+  activeImageIndex = 0;
+  lastFocusedEl = document.activeElement;
+
+  projectModalTitle.textContent = project.title;
+  projectModalYear.textContent = project.year;
+  projectModalBadge.textContent = CATEGORY_LABEL[project.type];
+  projectModalBadge.className = `project-badge project-badge-${CATEGORY_CLASS[project.type]}`;
+  renderModalDescription(project.description);
+  renderModalImage();
+
+  projectModal.classList.add('is-open');
+  projectModal.setAttribute('aria-hidden', 'false');
+  document.documentElement.classList.add('modal-open');
+  document.getElementById('projectModalClose').focus();
+}
+
+function closeProjectModal() {
+  projectModal.classList.remove('is-open');
+  projectModal.setAttribute('aria-hidden', 'true');
+  document.documentElement.classList.remove('modal-open');
+  activeProject = null;
+  if (lastFocusedEl) lastFocusedEl.focus();
+}
+
+function showPrevImage() {
+  if (!activeProject) return;
+  activeImageIndex = (activeImageIndex - 1 + activeProject.images.length) % activeProject.images.length;
+  renderModalImage();
+}
+
+function showNextImage() {
+  if (!activeProject) return;
+  activeImageIndex = (activeImageIndex + 1) % activeProject.images.length;
+  renderModalImage();
+}
+
+document.getElementById('projectModalClose').addEventListener('click', closeProjectModal);
+document.getElementById('projectModalOverlay').addEventListener('click', closeProjectModal);
+carouselPrev.addEventListener('click', showPrevImage);
+carouselNext.addEventListener('click', showNextImage);
+
+document.addEventListener('keydown', (e) => {
+  if (!projectModal.classList.contains('is-open')) return;
+  if (e.key === 'Escape') closeProjectModal();
+  if (e.key === 'ArrowLeft') showPrevImage();
+  if (e.key === 'ArrowRight') showNextImage();
 });
 
 // Footer year

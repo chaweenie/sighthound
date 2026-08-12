@@ -85,12 +85,12 @@
         <span>Years in Business</span>
       </div>
       <div class="trust-item">
-        <strong class="stat-text">Handyman to Full Renovations</strong>
+        <strong class="stat-text">Repairs &amp; Renovations</strong>
         <span>Full-Service Residential Contracting</span>
       </div>
       <div class="trust-item">
-        <strong class="stat-number" data-count="100">0</strong>
-        <span>% Licensed &amp; Insured</span>
+        <strong><span class="stat-number" data-count="100">0</span>%</strong>
+        <span>Licensed &amp; Insured</span>
       </div>
     </section>
 
@@ -171,18 +171,40 @@
       <div class="section-heading">
         <p class="eyebrow">Recent Work</p>
         <h2>A few projects we're proud of</h2>
-        <p class="section-sub">Photos coming soon — swap these placeholders for before/after shots of your best jobs.</p>
+        <p class="section-sub">Browse recent residential and commercial work — click a project to see more photos and details.</p>
       </div>
 
-      <div class="gallery-grid">
-        <div class="gallery-item reveal"><span>Project Photo</span></div>
-        <div class="gallery-item reveal"><span>Project Photo</span></div>
-        <div class="gallery-item reveal"><span>Project Photo</span></div>
-        <div class="gallery-item reveal"><span>Project Photo</span></div>
-        <div class="gallery-item reveal"><span>Project Photo</span></div>
-        <div class="gallery-item reveal"><span>Project Photo</span></div>
+      <div class="gallery-filters" id="galleryFilters" role="group" aria-label="Filter projects">
+        <button type="button" class="filter-btn active" data-filter="all">All</button>
+        <button type="button" class="filter-btn" data-filter="residential">Residential</button>
+        <button type="button" class="filter-btn" data-filter="commercial">Commercial</button>
       </div>
+
+      <div class="gallery-grid" id="galleryGrid"></div>
     </section>
+
+    <div class="project-modal" id="projectModal" aria-hidden="true">
+      <div class="project-modal-overlay" id="projectModalOverlay"></div>
+      <div class="project-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="projectModalTitle">
+        <button type="button" class="project-modal-close" id="projectModalClose" aria-label="Close">&times;</button>
+
+        <div class="project-modal-carousel">
+          <button type="button" class="carousel-arrow carousel-prev" id="carouselPrev" aria-label="Previous photo">&#8249;</button>
+          <img id="projectModalImage" class="project-modal-image" src="" alt="">
+          <button type="button" class="carousel-arrow carousel-next" id="carouselNext" aria-label="Next photo">&#8250;</button>
+          <span class="carousel-counter" id="carouselCounter"></span>
+        </div>
+
+        <div class="project-modal-body">
+          <div class="project-modal-heading">
+            <h3 id="projectModalTitle"></h3>
+            <span class="project-modal-year" id="projectModalYear"></span>
+            <span class="project-badge" id="projectModalBadge"></span>
+          </div>
+          <div class="project-modal-desc" id="projectModalDesc"></div>
+        </div>
+      </div>
+    </div>
 
     <section id="testimonials" class="testimonials section-band">
       <div class="section-heading">
@@ -301,6 +323,7 @@
 
   <button id="backToTop" class="back-to-top" aria-label="Back to top">↑</button>
 
+  <script src="projects-data.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
