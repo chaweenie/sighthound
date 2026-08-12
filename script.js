@@ -18,6 +18,22 @@ const pageLoaded = new Promise((resolve) => {
 
 Promise.all([loaderMinTime, pageLoaded]).then(hidePageLoader);
 
+// Hero background slideshow
+const heroSlides = document.querySelectorAll('#heroSlideshow .hero-slide');
+
+if (heroSlides.length > 0) {
+  let activeSlide = 0;
+  heroSlides[0].classList.add('is-active');
+
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    setInterval(() => {
+      heroSlides[activeSlide].classList.remove('is-active');
+      activeSlide = (activeSlide + 1) % heroSlides.length;
+      heroSlides[activeSlide].classList.add('is-active');
+    }, 5000);
+  }
+}
+
 // Sticky header shrink + scroll progress bar
 const header = document.getElementById('siteHeader');
 const progressBar = document.getElementById('progressBar');

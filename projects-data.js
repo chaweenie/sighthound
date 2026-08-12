@@ -9,7 +9,7 @@
 const PROJECTS = [
   {
     id: 'bc-cancer-society',
-    title: 'Custom Millwork Finish Match',
+    title: 'Millwork Finish Match',
     year: 2026,
     type: 'commercial',
     scope: 'renovation',
@@ -39,7 +39,7 @@ const PROJECTS = [
   },
   {
     id: 'pokey-okey',
-    title: 'Commercial Millwork & Cabinetry Build-Out',
+    title: 'Restaurant Millwork Build-Out',
     year: 2026,
     type: 'commercial',
     scope: 'renovation',
@@ -59,7 +59,7 @@ const PROJECTS = [
   },
   {
     id: 'smith',
-    title: 'Custom Shed Build',
+    title: 'Shed Build',
     year: 2024,
     type: 'home',
     scope: 'renovation',
@@ -69,11 +69,11 @@ const PROJECTS = [
   },
   {
     id: 'bayridge',
-    title: 'Custom Concrete Home Build',
+    title: 'Concrete Home Build',
     year: 2023,
     type: 'home',
     scope: 'build',
-    description: "A 10,000 sq ft custom concrete home built from the ground up. We managed the project end-to-end, delivering a strong concrete structure with a warm interior, clean modern lines, and thoughtful details throughout.",
+    description: "Built in beautiful West Vancouver from 2018 to 2023, this 10,000 sq ft concrete home was built from the ground up. We managed the project end-to-end, delivering a strong concrete structure with a warm interior, clean modern lines, and thoughtful details throughout.",
     folder: 'images/projects/2023/bayridge',
     images: [
       'IMG_0028.jpeg', 'IMG_1833.jpeg', 'IMG_1834.jpeg', 'IMG_1969.jpeg',
@@ -86,7 +86,7 @@ const PROJECTS = [
   },
   {
     id: 'charland',
-    title: 'Custom Storage & Paint Refresh',
+    title: 'Storage & Paint Refresh',
     year: 2023,
     type: 'apartment',
     scope: 'renovation',
@@ -96,7 +96,7 @@ const PROJECTS = [
   },
   {
     id: 'mathers',
-    title: 'Entrance Door Replacement',
+    title: 'Entry Door Renovation',
     year: 2014,
     type: 'home',
     scope: 'renovation',
