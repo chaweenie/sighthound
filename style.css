@@ -127,10 +127,6 @@ html.is-loading { overflow: hidden; }
   display: block;
   width: 100%;
   height: auto;
-  /* The GIF is baked on a solid black background; screen-blending it
-     drops the black out so it reads as transparent against the loader's
-     own (dark) background, without needing to re-encode the file. */
-  mix-blend-mode: screen;
 }
 
 .loader-text {
@@ -139,6 +135,15 @@ html.is-loading { overflow: hidden; }
   text-transform: uppercase;
   letter-spacing: 0.18em;
   font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.loader-status {
+  margin: -0.75rem 0 0;
+  color: var(--amber);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.7rem;
   font-weight: 700;
 }
 
@@ -779,7 +784,7 @@ html.is-loading { overflow: hidden; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 60%;
+  object-position: center bottom;
 }
 
 .about-list { margin-top: 1.5rem; display: grid; gap: 0.6rem; }
