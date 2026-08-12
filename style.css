@@ -571,7 +571,7 @@ html.is-loading { overflow: hidden; }
   z-index: -1;
   background:
     radial-gradient(circle at 18% 20%, rgba(242, 144, 24, 0.1), transparent 40%),
-    linear-gradient(180deg, rgba(8, 11, 7, 0.8) 0%, rgba(8, 11, 7, 0.92) 100%);
+    linear-gradient(180deg, rgba(8, 11, 7, 0.68) 0%, rgba(8, 11, 7, 0.82) 100%);
 }
 
 .hero-inner { max-width: 780px; }
@@ -1399,9 +1399,17 @@ html.modal-open { overflow: hidden; }
   font-weight: 700;
 }
 
-.whatsapp-link {
+.whatsapp-sep {
+  color: var(--ink-faint);
+}
+
+.contact-details .whatsapp-link {
   display: inline-flex;
-  margin-left: 0.5rem;
+  align-items: center;
+  gap: 0.4rem;
+  color: #25d366;
+  font-weight: 400;
+  font-size: 0.85rem;
   opacity: 0.85;
   transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
 }
@@ -1413,8 +1421,9 @@ html.modal-open { overflow: hidden; }
 }
 
 .whatsapp-icon {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
 }
 
 .contact-form {
