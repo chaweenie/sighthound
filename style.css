@@ -1370,6 +1370,43 @@ html.modal-open { overflow: hidden; }
   object-position: center bottom;
 }
 
+.wave-icon {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+  margin-left: 0.15em;
+}
+
+.wave-hand {
+  width: 0.85em;
+  height: 0.85em;
+  transform-origin: 75% 75%;
+  animation: waveHand 5s ease-in-out infinite;
+}
+
+.wave-lines {
+  position: absolute;
+  left: 90%;
+  top: 45%;
+  width: 0.5em;
+  height: 0.5em;
+  transform: translateY(-50%) scale(0.5);
+  opacity: 0;
+  animation: waveLinesPop 5s ease-in-out infinite;
+}
+
+@keyframes waveHand {
+  0%, 45%, 100% { transform: rotate(0deg); }
+  8%, 24% { transform: rotate(16deg); }
+  16%, 32% { transform: rotate(-10deg); }
+}
+
+@keyframes waveLinesPop {
+  0%, 6%, 45%, 100% { opacity: 0; transform: translateY(-50%) scale(0.5); }
+  14%, 30% { opacity: 1; transform: translateY(-50%) scale(1); }
+  22% { opacity: 0.5; transform: translateY(-50%) scale(0.75); }
+}
+
 .about-list { margin-top: 1.5rem; display: grid; gap: 0.6rem; }
 
 .about-list li {
@@ -1638,6 +1675,8 @@ input:focus, select:focus, textarea:focus {
   .reveal { opacity: 1; transform: none; transition: none; }
   .scroll-cue-mouse::before,
   .scroll-cue-finger::after { animation: none; }
+  .wave-hand { animation: none; }
+  .wave-lines { animation: none; opacity: 0; }
 }
 
 /* ---------- Responsive ---------- */
