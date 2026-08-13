@@ -602,7 +602,8 @@ html.is-loading { overflow: hidden; }
   color: var(--ink-faint);
 }
 
-.scroll-cue span {
+.scroll-cue-mouse {
+  display: block;
   width: 22px;
   height: 36px;
   border: 2px solid var(--ink-faint);
@@ -610,7 +611,7 @@ html.is-loading { overflow: hidden; }
   position: relative;
 }
 
-.scroll-cue span::before {
+.scroll-cue-mouse::before {
   content: "";
   position: absolute;
   top: 6px;
@@ -621,6 +622,39 @@ html.is-loading { overflow: hidden; }
   border-radius: 2px;
   transform: translateX(-50%);
   animation: scrollDot 1.8s ease-in-out infinite;
+}
+
+/* Touch equivalent of the mouse-scroll cue: a fingertip swiping down. */
+.scroll-cue-finger {
+  display: none;
+  width: 22px;
+  height: 36px;
+  position: relative;
+}
+
+.scroll-cue-finger::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 3px;
+  height: 20px;
+  background: linear-gradient(180deg, transparent, var(--ink-faint));
+  border-radius: 2px;
+  transform: translateX(-50%);
+}
+
+.scroll-cue-finger::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--ink-faint);
+  transform: translateX(-50%);
+  animation: fingerSwipe 1.8s ease-in-out infinite;
 }
 
 .scroll-cue p {
@@ -634,6 +668,12 @@ html.is-loading { overflow: hidden; }
   0% { opacity: 1; top: 6px; }
   70% { opacity: 0; top: 18px; }
   100% { opacity: 0; top: 6px; }
+}
+
+@keyframes fingerSwipe {
+  0% { opacity: 1; top: 0; }
+  70% { opacity: 0; top: 22px; }
+  100% { opacity: 0; top: 0; }
 }
 
 /* ---------- Trust bar ---------- */
@@ -1194,11 +1234,6 @@ html.modal-open { overflow: hidden; }
     border-top-color: var(--line);
   }
 
-  .header-actions {
-    width: 100%;
-    justify-content: space-between;
-  }
-
   .header-phone,
   .btn-with-note {
     flex: 1 1 auto;
@@ -1382,10 +1417,18 @@ html.modal-open { overflow: hidden; }
 .contact-details li {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.7rem;
   padding: 0.75rem 0;
   border-bottom: 1px solid var(--line);
   color: var(--ink-soft);
+}
+
+.contact-phone-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
 }
 
 .contact-icon {
@@ -1593,7 +1636,8 @@ input:focus, select:focus, textarea:focus {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; transition: none; }
-  .scroll-cue span::before { animation: none; }
+  .scroll-cue-mouse::before,
+  .scroll-cue-finger::after { animation: none; }
 }
 
 /* ---------- Responsive ---------- */
@@ -1633,6 +1677,22 @@ input:focus, select:focus, textarea:focus {
   .header-actions .btn-with-note { display: none; }
   .nav-toggle { display: flex; }
 
+  /* Logo true-centered, toggle pinned to the left — both pulled out of the
+     flex row so neither's width can push the other into wrapping. */
+  .brand {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .nav-toggle {
+    position: absolute;
+    left: clamp(1rem, 4vw, 1.5rem);
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
   .brand-logo {
     max-width: 46vw;
     width: auto;
@@ -1652,4 +1712,16 @@ input:focus, select:focus, textarea:focus {
   .hero-ctas .btn-with-note { width: 100%; }
   .hero-ctas .btn-with-note .btn { flex: 1 1 auto; }
   .hero-ctas .btn-ghost { width: 100%; }
+
+  /* The stacked buttons above take up enough height that a cue pinned to
+     the bottom of the hero can overlap the Call button — let it flow in
+     normal position below the buttons instead, and swap to a touch cue. */
+  .scroll-cue {
+    position: static;
+    transform: none;
+    margin-top: 2rem;
+  }
+
+  .scroll-cue-mouse { display: none; }
+  .scroll-cue-finger { display: block; }
 }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   <title>Sighthound Builders | General Contractor</title>
   <meta name="description" content="Sighthound Builders — general contractor serving the Lower Mainland, based out of Burnaby. Handyman work and renovations done right.">
   <link rel="icon" type="image/png" href="images/logo_placeholder/notext/icon_head_orange_flat.png">
@@ -93,10 +93,11 @@
           </span>
           <a href="tel:+16043064447" class="btn btn-ghost btn-lg">Call (604) 306-4447</a>
         </div>
-      </div>
-      <div class="scroll-cue" aria-hidden="true">
-        <span></span>
-        <p>Scroll</p>
+        <div class="scroll-cue" aria-hidden="true">
+          <span class="scroll-cue-mouse"></span>
+          <span class="scroll-cue-finger"></span>
+          <p>Scroll</p>
+        </div>
       </div>
     </section>
 
@@ -269,7 +270,7 @@
         <p class="section-sub">Fill out the form or reach out directly — whichever's easier.</p>
 
         <ul class="contact-details">
-          <li><img class="contact-icon" src="images/icons/regular/orange_phone.png" alt=""><strong>Phone:</strong> <a href="tel:+16043064447">(604) 306-4447</a> <span class="whatsapp-sep">—</span> <a href="https://wa.me/16043064447" target="_blank" rel="noopener" class="whatsapp-link"><img src="images/icons/regular/green_whatsapp.png" alt="" class="whatsapp-icon">Message on WhatsApp</a></li>
+          <li><img class="contact-icon" src="images/icons/regular/orange_phone.png" alt=""><span class="contact-phone-line"><strong>Phone:</strong> <a href="tel:+16043064447">(604) 306-4447</a></span><a href="https://wa.me/16043064447" target="_blank" rel="noopener" class="whatsapp-link"><span class="whatsapp-sep">—</span> <img src="images/icons/regular/green_whatsapp.png" alt="" class="whatsapp-icon">Message on WhatsApp</a></li>
           <li><img class="contact-icon" src="images/icons/regular/orange_email.png" alt=""><strong>Email:</strong> <a href="mailto:derrick@sighthoundbuilders.ca">derrick@sighthoundbuilders.ca</a></li>
           <li><img class="contact-icon" src="images/icons/regular/orange_location.png" alt=""><strong>Service Area:</strong> Lower Mainland, based in Burnaby</li>
         </ul>
@@ -328,8 +329,8 @@
           </div>
           <div class="form-row form-row-split">
             <div>
-              <label for="startDate">Ideal Start Date</label>
-              <input type="date" id="startDate" name="startDate">
+              <label for="startDate">Ideal Start Date <span class="required-mark" aria-hidden="true">*</span></label>
+              <input type="date" id="startDate" name="startDate" required>
             </div>
             <div>
               <label for="finishDate">Ideal Finish Date</label>

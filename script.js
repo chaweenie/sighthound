@@ -432,12 +432,43 @@ const galleryMarquee = (() => {
     wheelIdleTimer = setTimeout(() => interactionEnd(0), 150);
   }
 
+  // On touch devices the browser drives its own momentum scroll after the
+  // finger lifts, which can keep moving scrollLeft for a while. If our rAF
+  // loop resumed writing to scrollLeft immediately on touchend, the two
+  // would fight every frame and visibly jitter. Instead, stay "interacting"
+  // through touchend and watch for scroll events to go quiet before handing
+  // control back to the autoplay.
+  let touchSettleTimer = null;
+  let awaitingTouchSettle = false;
+
+  function scheduleTouchSettle() {
+    clearTimeout(touchSettleTimer);
+    touchSettleTimer = setTimeout(() => {
+      awaitingTouchSettle = false;
+      interactionEnd(0);
+    }, 120);
+  }
+
+  function onTouchStart() {
+    awaitingTouchSettle = false;
+    clearTimeout(touchSettleTimer);
+    interactionStart();
+  }
+
+  function onTouchEnd() {
+    awaitingTouchSettle = true;
+    scheduleTouchSettle();
+  }
+
   galleryScroll.addEventListener('mousedown', onMouseDown);
-  galleryScroll.addEventListener('touchstart', interactionStart, { passive: true });
-  galleryScroll.addEventListener('touchend', () => interactionEnd(0));
-  galleryScroll.addEventListener('touchcancel', () => interactionEnd(0));
+  galleryScroll.addEventListener('touchstart', onTouchStart, { passive: true });
+  galleryScroll.addEventListener('touchend', onTouchEnd);
+  galleryScroll.addEventListener('touchcancel', onTouchEnd);
   galleryScroll.addEventListener('wheel', onWheel, { passive: true });
-  galleryScroll.addEventListener('scroll', handleScroll);
+  galleryScroll.addEventListener('scroll', () => {
+    handleScroll();
+    if (awaitingTouchSettle) scheduleTouchSettle();
+  });
   rafId = requestAnimationFrame(tick);
 
   return {

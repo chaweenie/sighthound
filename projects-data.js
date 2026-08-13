@@ -8,6 +8,23 @@
 // (see buildSlides() in script.js) instead of appearing as separate carousel photos.
 const PROJECTS = [
   {
+    id: 'bayridge',
+    title: 'Concrete Home Build',
+    year: 2023,
+    type: 'home',
+    scope: 'build',
+    description: "Built in beautiful West Vancouver from 2018 to 2023, this 10,000 sq ft concrete home was built from the ground up. We managed the project end-to-end, delivering a strong concrete structure with a warm interior, clean modern lines, and thoughtful details throughout.",
+    folder: 'images/projects/2023/bayridge',
+    images: [
+      'IMG_5106.jpeg', 'IMG_5372.jpeg', 'IMG_5116.jpeg', 'IMG_5371.jpeg',
+      'IMG_5375.jpeg', 'IMG_2649.jpeg', 'IMG_2648.jpeg',
+      'IMG_0028.jpeg', 'IMG_1833.jpeg', 'IMG_1834.jpeg', 'IMG_1969.jpeg',
+      'IMG_2259.jpeg', 'IMG_3006.jpeg', 'IMG_3356.jpeg', 'IMG_5083.jpeg',
+      'IMG_5102.jpeg', 'IMG_5103.jpeg', 'IMG_5105.jpeg', 'IMG_5114.jpeg',
+      'IMG_9798.jpeg', 'IMG_9908.jpeg',
+    ],
+  },
+  {
     id: 'bc-cancer-society',
     title: 'Millwork Finish Match',
     year: 2026,
@@ -29,7 +46,7 @@ const PROJECTS = [
   },
   {
     id: 'pokey-okey',
-    title: 'Restaurant Millwork Build-Out',
+    title: 'Restaurant Millwork Installation',
     year: 2026,
     type: 'commercial',
     scope: 'renovation',
@@ -56,23 +73,6 @@ const PROJECTS = [
     description: "Converted an old shed into a cozy, comfortable loft space — extra square footage the client didn't have before.",
     folder: 'images/projects/2024/Smith',
     images: ['Smith Ave.jpeg'],
-  },
-  {
-    id: 'bayridge',
-    title: 'Concrete Home Build',
-    year: 2023,
-    type: 'home',
-    scope: 'build',
-    description: "Built in beautiful West Vancouver from 2018 to 2023, this 10,000 sq ft concrete home was built from the ground up. We managed the project end-to-end, delivering a strong concrete structure with a warm interior, clean modern lines, and thoughtful details throughout.",
-    folder: 'images/projects/2023/bayridge',
-    images: [
-      'IMG_0028.jpeg', 'IMG_1833.jpeg', 'IMG_1834.jpeg', 'IMG_1969.jpeg',
-      'IMG_2259.jpeg', 'IMG_2648.jpeg', 'IMG_2649.jpeg', 'IMG_3006.jpeg',
-      'IMG_3356.jpeg', 'IMG_5083.jpeg', 'IMG_5102.jpeg', 'IMG_5103.jpeg',
-      'IMG_5105.jpeg', 'IMG_5106.jpeg', 'IMG_5114.jpeg', 'IMG_5116.jpeg',
-      'IMG_5371.jpeg', 'IMG_5372.jpeg', 'IMG_5375.jpeg', 'IMG_9798.jpeg',
-      'IMG_9908.jpeg',
-    ],
   },
   {
     id: 'charland',
