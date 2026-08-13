@@ -1397,6 +1397,36 @@ html.modal-open { overflow: hidden; }
   background: linear-gradient(135deg, var(--navy-deep), var(--navy));
   overflow: hidden;
   box-shadow: var(--shadow-md);
+  perspective: 1200px;
+}
+
+/* Easter egg: click flips from Derrick's photo to his greyhound's. */
+.about-media-flip {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform 0.7s var(--ease);
+}
+
+.about-media-flip.flipped {
+  transform: rotateY(180deg);
+}
+
+.about-media-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.about-media-back {
+  transform: rotateY(180deg);
 }
 
 .about-media img {
@@ -1430,7 +1460,9 @@ html.modal-open { overflow: hidden; }
 }
 
 .wave-icon.is-visible .wave-hand {
-  animation: waveHand 5s ease-in-out infinite;
+  /* Plays once per appearance — removing/re-adding is-visible (scrolling
+     away and back) is what re-triggers it, not a repeating loop. */
+  animation: waveHand 2.2s ease-in-out;
   animation-delay: 0.3s;
 }
 
@@ -1438,27 +1470,26 @@ html.modal-open { overflow: hidden; }
   position: absolute;
   left: 90%;
   top: 45%;
-  width: 0.5em;
-  height: 0.5em;
+  width: 0.85em;
+  height: 0.85em;
   transform: translateY(-50%) translateX(-6px) scale(0.5);
   opacity: 0;
 }
 
 .wave-icon.is-visible .wave-lines {
-  /* Pops out once and holds — not a repeating pulse. */
-  animation: waveLinesPop 0.6s ease-out forwards;
+  /* Pops out once and holds still — no bounce/settle after. */
+  animation: waveLinesPop 0.5s ease-out forwards;
   animation-delay: 0.3s;
 }
 
 @keyframes waveHand {
-  0%, 45%, 100% { transform: rotate(0deg); }
-  8%, 24% { transform: rotate(16deg); }
-  16%, 32% { transform: rotate(-10deg); }
+  0%, 100% { transform: rotate(0deg); }
+  18%, 53% { transform: rotate(16deg); }
+  36%, 71% { transform: rotate(-10deg); }
 }
 
 @keyframes waveLinesPop {
   0% { opacity: 0; transform: translateY(-50%) translateX(-6px) scale(0.5); }
-  70% { opacity: 1; transform: translateY(-50%) translateX(4px) scale(1.05); }
   100% { opacity: 1; transform: translateY(-50%) translateX(0) scale(1); }
 }
 
@@ -1745,6 +1776,7 @@ input:focus, select:focus, textarea:focus {
   .wave-icon.is-visible .wave-hand,
   .wave-icon.is-visible .wave-lines { animation: none; }
   .wave-lines { opacity: 0; }
+  .about-media-flip { transition: none; }
 }
 
 /* ---------- Responsive ---------- */
@@ -1759,6 +1791,65 @@ input:focus, select:focus, textarea:focus {
   .gallery-nav {
     display: grid;
   }
+
+  /* One project fills the viewport at a time, snapping cleanly on native
+     swipe as well as the </> buttons — no custom scroll-position JS
+     involved, so there's nothing for it to fight and no jitter. */
+  .gallery-scroll {
+    scroll-snap-type: x mandatory;
+  }
+
+  .gallery-track {
+    /* The base rule's width:max-content (needed so the desktop marquee's
+       tripled content has real intrinsic width) conflicts with a 100%-
+       basis child here: a max-content container can't resolve a child's
+       percentage against itself, which was collapsing every card down to
+       a sliver. Give the track a definite width instead. */
+    width: 100%;
+    gap: 0;
+  }
+
+  .project-card {
+    flex-basis: 100%;
+    width: 100%;
+    scroll-snap-align: start;
+  }
+
+  .gallery-thumbs {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    overflow-x: auto;
+    margin-top: 1rem;
+    padding: 0.25rem;
+  }
+
+  .gallery-thumb {
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: none;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.25s var(--ease), border-color 0.25s var(--ease);
+  }
+
+  .gallery-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .gallery-thumb.active {
+    opacity: 1;
+    border-color: var(--amber);
+  }
+
+  .gallery-thumbs[hidden] { display: none; }
 
   .main-nav {
     position: fixed;

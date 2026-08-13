@@ -205,12 +205,13 @@
       </div>
 
       <div class="gallery-scroll-wrap">
-        <button type="button" class="gallery-nav gallery-nav-prev" id="galleryPrev" aria-label="Previous projects">&#8249;</button>
+        <button type="button" class="gallery-nav gallery-nav-prev" id="galleryPrev" aria-label="Previous project">&#8249;</button>
         <div class="gallery-scroll" id="galleryScroll">
           <div class="gallery-track" id="galleryGrid"></div>
         </div>
-        <button type="button" class="gallery-nav gallery-nav-next" id="galleryNext" aria-label="Next projects">&#8250;</button>
+        <button type="button" class="gallery-nav gallery-nav-next" id="galleryNext" aria-label="Next project">&#8250;</button>
       </div>
+      <div class="gallery-thumbs" id="galleryThumbs" hidden></div>
     </section>
 
     <div class="project-modal" id="projectModal" aria-hidden="true">
@@ -239,7 +240,14 @@
 
     <section id="about" class="about">
       <div class="about-media reveal">
-        <img src="images/about_me/aboutme_02.jpg" alt="Derrick, founder of Sighthound Builders, outdoors with his greyhound — the inspiration for the company name">
+        <button type="button" class="about-media-flip" id="aboutFlip" aria-label="Click to flip the photo">
+          <span class="about-media-face about-media-front">
+            <img src="images/about_me/aboutme_02.jpg" alt="Derrick, founder of Sighthound Builders, outdoors with his greyhound — the inspiration for the company name">
+          </span>
+          <span class="about-media-face about-media-back">
+            <img src="images/about_me/aboutme_01.jpg" alt="Derrick's greyhound resting his head on the couch, the inspiration for the company name">
+          </span>
+        </button>
       </div>
       <div class="about-copy reveal">
         <p class="eyebrow">About</p>

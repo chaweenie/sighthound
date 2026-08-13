@@ -206,6 +206,10 @@ const galleryScroll = document.getElementById('galleryScroll');
 const galleryFilters = document.getElementById('galleryFilters');
 const galleryPrev = document.getElementById('galleryPrev');
 const galleryNext = document.getElementById('galleryNext');
+const galleryThumbs = document.getElementById('galleryThumbs');
+
+let mobileProjects = [];
+let mobileIndex = 0;
 
 // Images with "before"/"after" in the filename are paired into one before/after
 // slide instead of appearing as separate carousel photos.
@@ -289,14 +293,52 @@ function updateGalleryNavButtons() {
   const canScroll = galleryGrid.scrollWidth > galleryScroll.clientWidth + 1;
   galleryPrev.hidden = !canScroll;
   galleryNext.hidden = !canScroll;
-  if (!canScroll) return;
-  galleryPrev.disabled = galleryScroll.scrollLeft <= 1;
-  galleryNext.disabled = galleryScroll.scrollLeft >= galleryGrid.scrollWidth - galleryScroll.clientWidth - 1;
+}
+
+function setActiveThumb(index) {
+  mobileIndex = index;
+  galleryThumbs.querySelectorAll('.gallery-thumb').forEach((thumb, i) => {
+    thumb.classList.toggle('active', i === index);
+  });
+}
+
+function renderGalleryThumbs(projects) {
+  if (!galleryThumbs) return;
+  galleryThumbs.innerHTML = '';
+
+  if (projects.length < 2) {
+    galleryThumbs.hidden = true;
+    return;
+  }
+
+  galleryThumbs.hidden = false;
+  projects.forEach((project, i) => {
+    const thumb = document.createElement('button');
+    thumb.type = 'button';
+    thumb.className = 'gallery-thumb';
+    thumb.setAttribute('aria-label', `Jump to ${project.title}`);
+    thumb.innerHTML = `<img src="${coverImagePath(project)}" alt="" loading="lazy">`;
+    thumb.addEventListener('click', () => goToMobileIndex(i));
+    galleryThumbs.appendChild(thumb);
+  });
+  setActiveThumb(0);
+}
+
+// Wraps in both directions — index-driven, so there's no physical tripled
+// track to keep in sync, unlike the desktop marquee's infinite loop.
+function goToMobileIndex(index) {
+  const count = mobileProjects.length;
+  if (count === 0) return;
+  const wrapped = ((index % count) + count) % count;
+  galleryScroll.scrollTo({ left: wrapped * galleryStep(), behavior: 'smooth' });
+  setActiveThumb(wrapped);
 }
 
 function renderGallery(filter) {
   galleryGrid.innerHTML = '';
   galleryMarquee.stop();
+  mobileProjects = [];
+  renderGalleryThumbs([]);
 
   const filtered = (typeof PROJECTS !== 'undefined' ? PROJECTS : []).filter((project) => {
     if (filter === 'all') return true;
@@ -324,8 +366,12 @@ function renderGallery(filter) {
   galleryScroll.classList.remove('is-static');
 
   if (isMobileGallery()) {
-    // Single copy, no autoplay — native swipe or the </> buttons only.
+    // Single full-width copy — native swipe or the </> buttons, both
+    // wrapping around unlimited via goToMobileIndex, plus a thumbnail
+    // strip previewing the rest of the set.
     galleryScroll.scrollLeft = 0;
+    mobileProjects = filtered;
+    renderGalleryThumbs(filtered);
     updateGalleryNavButtons();
     return;
   }
@@ -366,13 +412,33 @@ function galleryStep() {
 
 if (galleryPrev && galleryNext) {
   galleryPrev.addEventListener('click', () => {
-    galleryScroll.scrollBy({ left: -galleryStep(), behavior: 'smooth' });
+    if (isMobileGallery() && mobileProjects.length > 0) {
+      goToMobileIndex(mobileIndex - 1);
+    } else {
+      galleryScroll.scrollBy({ left: -galleryStep(), behavior: 'smooth' });
+    }
   });
   galleryNext.addEventListener('click', () => {
-    galleryScroll.scrollBy({ left: galleryStep(), behavior: 'smooth' });
+    if (isMobileGallery() && mobileProjects.length > 0) {
+      goToMobileIndex(mobileIndex + 1);
+    } else {
+      galleryScroll.scrollBy({ left: galleryStep(), behavior: 'smooth' });
+    }
   });
+
+  // Keep the active thumbnail in sync with native swipe too, not just the
+  // buttons — debounced so it settles once scrolling actually stops.
+  let galleryScrollSyncTimer;
   galleryScroll.addEventListener('scroll', () => {
-    if (isMobileGallery()) updateGalleryNavButtons();
+    if (!isMobileGallery()) return;
+    updateGalleryNavButtons();
+    if (mobileProjects.length < 2) return;
+    clearTimeout(galleryScrollSyncTimer);
+    galleryScrollSyncTimer = setTimeout(() => {
+      const count = mobileProjects.length;
+      const nearest = Math.round(galleryScroll.scrollLeft / galleryStep());
+      setActiveThumb(((nearest % count) + count) % count);
+    }, 120);
   });
 }
 
@@ -674,6 +740,14 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowLeft') showPrevImage();
   if (e.key === 'ArrowRight') showNextImage();
 });
+
+// Easter egg: click Derrick's About photo to flip to his greyhound's
+const aboutFlip = document.getElementById('aboutFlip');
+if (aboutFlip) {
+  aboutFlip.addEventListener('click', () => {
+    aboutFlip.classList.toggle('flipped');
+  });
+}
 
 // Footer year
 document.getElementById('year').textContent = new Date().getFullYear();
