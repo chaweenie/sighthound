@@ -1436,6 +1436,10 @@ html.modal-open { overflow: hidden; }
   object-position: center bottom;
 }
 
+.about-media-back img {
+  object-position: center top;
+}
+
 .wave-icon {
   position: relative;
   display: inline-flex;
