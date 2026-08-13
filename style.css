@@ -1445,7 +1445,8 @@ html.modal-open { overflow: hidden; }
 }
 
 .wave-icon.is-visible .wave-lines {
-  animation: waveLinesPop 5s ease-in-out infinite;
+  /* Pops out once and holds — not a repeating pulse. */
+  animation: waveLinesPop 0.6s ease-out forwards;
   animation-delay: 0.3s;
 }
 
@@ -1456,9 +1457,9 @@ html.modal-open { overflow: hidden; }
 }
 
 @keyframes waveLinesPop {
-  0%, 6%, 45%, 100% { opacity: 0; transform: translateY(-50%) translateX(-6px) scale(0.5); }
-  14%, 30% { opacity: 1; transform: translateY(-50%) translateX(4px) scale(1); }
-  22% { opacity: 0.5; transform: translateY(-50%) translateX(1px) scale(0.75); }
+  0% { opacity: 0; transform: translateY(-50%) translateX(-6px) scale(0.5); }
+  70% { opacity: 1; transform: translateY(-50%) translateX(4px) scale(1.05); }
+  100% { opacity: 1; transform: translateY(-50%) translateX(0) scale(1); }
 }
 
 .about-list { margin-top: 1.5rem; display: grid; gap: 0.6rem; }
