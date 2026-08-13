@@ -89,6 +89,22 @@ const revealObserver = new IntersectionObserver(
 
 document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
 
+// Waving hand next to the About greeting — fades in/out with scroll
+// position (unlike .reveal, this toggles back off if scrolled back past),
+// re-triggering the wave + motion-lines animation each time it appears.
+const waveIcon = document.querySelector('.wave-icon');
+if (waveIcon) {
+  const waveObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        waveIcon.classList.toggle('is-visible', entry.isIntersecting);
+      });
+    },
+    { threshold: 0.3 }
+  );
+  waveObserver.observe(waveIcon);
+}
+
 // Animated stat counters
 const statEls = document.querySelectorAll('.stat-number');
 
@@ -188,6 +204,8 @@ const SCOPE_LABEL = { renovation: 'Renovation', build: 'New Build' };
 const galleryGrid = document.getElementById('galleryGrid');
 const galleryScroll = document.getElementById('galleryScroll');
 const galleryFilters = document.getElementById('galleryFilters');
+const galleryPrev = document.getElementById('galleryPrev');
+const galleryNext = document.getElementById('galleryNext');
 
 // Images with "before"/"after" in the filename are paired into one before/after
 // slide instead of appearing as separate carousel photos.
@@ -256,6 +274,26 @@ function buildCard(project) {
   return card;
 }
 
+// Below this width, mobile touch-momentum scrolling kept fighting the
+// autoplay's own programmatic scrollLeft writes for control and jittering
+// no matter how carefully the handoff was timed. Simpler and steadier:
+// skip the autoplay/looping entirely on small screens and let visitors
+// page through with plain native swipe or the </> buttons instead.
+const GALLERY_MOBILE_BREAKPOINT = 780;
+function isMobileGallery() {
+  return window.matchMedia(`(max-width: ${GALLERY_MOBILE_BREAKPOINT}px)`).matches;
+}
+
+function updateGalleryNavButtons() {
+  if (!galleryPrev || !galleryNext) return;
+  const canScroll = galleryGrid.scrollWidth > galleryScroll.clientWidth + 1;
+  galleryPrev.hidden = !canScroll;
+  galleryNext.hidden = !canScroll;
+  if (!canScroll) return;
+  galleryPrev.disabled = galleryScroll.scrollLeft <= 1;
+  galleryNext.disabled = galleryScroll.scrollLeft >= galleryGrid.scrollWidth - galleryScroll.clientWidth - 1;
+}
+
 function renderGallery(filter) {
   galleryGrid.innerHTML = '';
   galleryMarquee.stop();
@@ -268,6 +306,7 @@ function renderGallery(filter) {
   if (filtered.length === 0) {
     galleryGrid.innerHTML = '<p class="gallery-empty">No projects in this category yet.</p>';
     galleryScroll.classList.add('is-static');
+    updateGalleryNavButtons();
     return;
   }
 
@@ -278,11 +317,21 @@ function renderGallery(filter) {
 
   if (fitsWithoutScrolling) {
     galleryScroll.classList.add('is-static');
+    updateGalleryNavButtons();
     return;
   }
 
   galleryScroll.classList.remove('is-static');
+
+  if (isMobileGallery()) {
+    // Single copy, no autoplay — native swipe or the </> buttons only.
+    galleryScroll.scrollLeft = 0;
+    updateGalleryNavButtons();
+    return;
+  }
+
   const singleSetWidth = galleryGrid.scrollWidth;
+  const firstCardWidth = galleryGrid.querySelector('.project-card').getBoundingClientRect().width;
 
   // Triple the set so there's a full copy of slack on either side of the
   // visible one — auto-scroll and manual dragging can wrap seamlessly
@@ -290,8 +339,12 @@ function renderGallery(filter) {
   filtered.forEach((project) => galleryGrid.appendChild(buildCard(project)));
   filtered.forEach((project) => galleryGrid.appendChild(buildCard(project)));
 
-  galleryScroll.scrollLeft = singleSetWidth;
+  // Start with the filter's first card centered in the viewport, rather
+  // than flush against the left edge.
+  const centerOffset = Math.max(0, (galleryScroll.clientWidth - firstCardWidth) / 2);
+  galleryScroll.scrollLeft = singleSetWidth - centerOffset;
   galleryMarquee.start(singleSetWidth);
+  updateGalleryNavButtons();
 }
 
 if (galleryFilters) {
@@ -301,6 +354,25 @@ if (galleryFilters) {
     galleryFilters.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
     btn.classList.add('active');
     renderGallery(btn.dataset.filter);
+  });
+}
+
+function galleryStep() {
+  const firstCard = galleryGrid.querySelector('.project-card');
+  if (!firstCard) return galleryScroll.clientWidth;
+  const gap = parseFloat(getComputedStyle(galleryGrid).columnGap) || 0;
+  return firstCard.getBoundingClientRect().width + gap;
+}
+
+if (galleryPrev && galleryNext) {
+  galleryPrev.addEventListener('click', () => {
+    galleryScroll.scrollBy({ left: -galleryStep(), behavior: 'smooth' });
+  });
+  galleryNext.addEventListener('click', () => {
+    galleryScroll.scrollBy({ left: galleryStep(), behavior: 'smooth' });
+  });
+  galleryScroll.addEventListener('scroll', () => {
+    if (isMobileGallery()) updateGalleryNavButtons();
   });
 }
 

@@ -32,6 +32,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -40,6 +41,7 @@ body {
   color: var(--ink);
   background: var(--bg);
   line-height: 1.55;
+  overflow-x: hidden;
 }
 
 h1, h2, h3 {
@@ -624,36 +626,20 @@ html.is-loading { overflow: hidden; }
   animation: scrollDot 1.8s ease-in-out infinite;
 }
 
-/* Touch equivalent of the mouse-scroll cue: a fingertip swiping down. */
+/* Touch equivalent of the mouse-scroll cue. */
 .scroll-cue-finger {
   display: none;
-  width: 22px;
-  height: 36px;
+  width: 20px;
+  height: 30px;
   position: relative;
 }
 
-.scroll-cue-finger::before {
-  content: "";
+.scroll-cue-finger img {
   position: absolute;
-  top: 0;
-  left: 50%;
-  width: 3px;
-  height: 20px;
-  background: linear-gradient(180deg, transparent, var(--ink-faint));
-  border-radius: 2px;
-  transform: translateX(-50%);
-}
-
-.scroll-cue-finger::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: var(--ink-faint);
-  transform: translateX(-50%);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   animation: fingerSwipe 1.8s ease-in-out infinite;
 }
 
@@ -671,9 +657,9 @@ html.is-loading { overflow: hidden; }
 }
 
 @keyframes fingerSwipe {
-  0% { opacity: 1; top: 0; }
-  70% { opacity: 0; top: 22px; }
-  100% { opacity: 0; top: 0; }
+  0% { opacity: 1; transform: translateY(0); }
+  70% { opacity: 0; transform: translateY(14px); }
+  100% { opacity: 0; transform: translateY(0); }
 }
 
 /* ---------- Trust bar ---------- */
@@ -828,6 +814,44 @@ html.is-loading { overflow: hidden; }
   border-color: var(--amber);
   color: var(--navy-deep);
 }
+
+.gallery-scroll-wrap {
+  position: relative;
+}
+
+.gallery-nav {
+  display: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(10, 14, 9, 0.6);
+  color: #fff;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  place-items: center;
+  transition: background 0.25s var(--ease), opacity 0.25s var(--ease);
+}
+
+.gallery-nav:hover {
+  background: var(--amber-deep);
+}
+
+.gallery-nav:disabled {
+  opacity: 0.35;
+  cursor: default;
+  background: rgba(10, 14, 9, 0.6);
+}
+
+.gallery-nav-prev { left: -0.25rem; }
+.gallery-nav-next { right: -0.25rem; }
+
+.gallery-nav[hidden] { display: none; }
 
 .gallery-scroll {
   overflow-x: auto;
@@ -1311,6 +1335,18 @@ html.modal-open { overflow: hidden; }
     border-bottom: 2px solid var(--navy-deep);
   }
 
+  /* The 16:10 aspect-ratio (tuned for a wide desktop dialog) made photos
+     cramped on a narrow phone screen — especially the before/after split,
+     stacked into two short slivers. Give the carousel real height instead. */
+  .project-modal {
+    padding: 0.75rem;
+  }
+
+  .project-modal-carousel {
+    aspect-ratio: auto;
+    height: 58vh;
+  }
+
   .header-inner {
     padding: 0 1rem;
   }
@@ -1375,13 +1411,27 @@ html.modal-open { overflow: hidden; }
   display: inline-flex;
   vertical-align: middle;
   margin-left: 0.15em;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+}
+
+.wave-icon.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .wave-hand {
   width: 0.85em;
   height: 0.85em;
-  transform-origin: 75% 75%;
+  /* Pivot bottom-left-ish (like a wrist), inset slightly from the edge
+     rather than flush to the corner. */
+  transform-origin: 30% 80%;
+}
+
+.wave-icon.is-visible .wave-hand {
   animation: waveHand 5s ease-in-out infinite;
+  animation-delay: 0.3s;
 }
 
 .wave-lines {
@@ -1390,9 +1440,13 @@ html.modal-open { overflow: hidden; }
   top: 45%;
   width: 0.5em;
   height: 0.5em;
-  transform: translateY(-50%) scale(0.5);
+  transform: translateY(-50%) translateX(-6px) scale(0.5);
   opacity: 0;
+}
+
+.wave-icon.is-visible .wave-lines {
   animation: waveLinesPop 5s ease-in-out infinite;
+  animation-delay: 0.3s;
 }
 
 @keyframes waveHand {
@@ -1402,9 +1456,9 @@ html.modal-open { overflow: hidden; }
 }
 
 @keyframes waveLinesPop {
-  0%, 6%, 45%, 100% { opacity: 0; transform: translateY(-50%) scale(0.5); }
-  14%, 30% { opacity: 1; transform: translateY(-50%) scale(1); }
-  22% { opacity: 0.5; transform: translateY(-50%) scale(0.75); }
+  0%, 6%, 45%, 100% { opacity: 0; transform: translateY(-50%) translateX(-6px) scale(0.5); }
+  14%, 30% { opacity: 1; transform: translateY(-50%) translateX(4px) scale(1); }
+  22% { opacity: 0.5; transform: translateY(-50%) translateX(1px) scale(0.75); }
 }
 
 .about-list { margin-top: 1.5rem; display: grid; gap: 0.6rem; }
@@ -1674,9 +1728,11 @@ input:focus, select:focus, textarea:focus {
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .scroll-cue-mouse::before,
-  .scroll-cue-finger::after { animation: none; }
-  .wave-hand { animation: none; }
-  .wave-lines { animation: none; opacity: 0; }
+  .scroll-cue-finger img { animation: none; }
+  .wave-icon { transition: opacity 0.3s linear; transform: none; }
+  .wave-icon.is-visible .wave-hand,
+  .wave-icon.is-visible .wave-lines { animation: none; }
+  .wave-lines { opacity: 0; }
 }
 
 /* ---------- Responsive ---------- */
@@ -1688,6 +1744,10 @@ input:focus, select:focus, textarea:focus {
 }
 
 @media (max-width: 780px) {
+  .gallery-nav {
+    display: grid;
+  }
+
   .main-nav {
     position: fixed;
     top: var(--header-h);
