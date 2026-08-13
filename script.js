@@ -741,6 +741,40 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowRight') showNextImage();
 });
 
+// Mobile services carousel: same </> paging as the project gallery, but
+// without wraparound or thumbnails — there are only three fixed cards.
+const servicesScroll = document.getElementById('servicesScroll');
+const servicesGrid = document.getElementById('servicesGrid');
+const servicesPrev = document.getElementById('servicesPrev');
+const servicesNext = document.getElementById('servicesNext');
+
+if (servicesScroll && servicesGrid && servicesPrev && servicesNext) {
+  const servicesStep = () => {
+    const firstCard = servicesGrid.querySelector('.service-card');
+    return firstCard ? firstCard.getBoundingClientRect().width : servicesScroll.clientWidth;
+  };
+
+  const updateServicesNav = () => {
+    servicesPrev.disabled = servicesScroll.scrollLeft <= 4;
+    servicesNext.disabled = servicesScroll.scrollLeft >= servicesGrid.scrollWidth - servicesScroll.clientWidth - 4;
+  };
+
+  servicesPrev.addEventListener('click', () => {
+    servicesScroll.scrollBy({ left: -servicesStep(), behavior: 'smooth' });
+  });
+  servicesNext.addEventListener('click', () => {
+    servicesScroll.scrollBy({ left: servicesStep(), behavior: 'smooth' });
+  });
+
+  let servicesScrollSyncTimer;
+  servicesScroll.addEventListener('scroll', () => {
+    clearTimeout(servicesScrollSyncTimer);
+    servicesScrollSyncTimer = setTimeout(updateServicesNav, 100);
+  });
+  window.addEventListener('resize', updateServicesNav);
+  updateServicesNav();
+}
+
 // Easter egg: click Derrick's About photo to flip to his greyhound's
 const aboutFlip = document.getElementById('aboutFlip');
 if (aboutFlip) {
