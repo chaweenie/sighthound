@@ -1506,13 +1506,24 @@ html.modal-open { overflow: hidden; }
 }
 
 .contact-details li {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.5rem 0.7rem;
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  align-items: start;
+  gap: 0 0.7rem;
   padding: 0.75rem 0;
   border-bottom: 1px solid var(--line);
   color: var(--ink-soft);
+}
+
+/* Everything but the icon lives in this single grid cell, so any wrapped
+   line stays indented in the text column instead of sliding back under
+   the icon. */
+.contact-detail-content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.7rem;
+  min-width: 0;
 }
 
 .contact-phone-line {
@@ -1525,7 +1536,7 @@ html.modal-open { overflow: hidden; }
 .contact-icon {
   width: 22px;
   height: 22px;
-  flex-shrink: 0;
+  margin-top: 0.15em;
 }
 
 .contact-details a {
