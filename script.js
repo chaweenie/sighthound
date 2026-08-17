@@ -206,11 +206,6 @@ function setFormStatus(message, kind) {
 quoteForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  if (quoteForm.action.includes('YOUR_FORM_ID')) {
-    setFormStatus('This form isn’t connected yet — please call or email us directly for now.', 'error');
-    return;
-  }
-
   const emailValue = document.getElementById('email').value;
   document.getElementById('formReplyTo').value = emailValue;
   document.getElementById('formCc').value = document.getElementById('sendCopy').checked ? emailValue : '';

@@ -310,19 +310,15 @@
       </div>
 
       <!--
-        TODO before launch: this posts to a placeholder Formspree endpoint.
-        1. Sign up at formspree.io using derrick@sighthoundbuilders.ca
-        2. Create a form, copy the ID from the URL Formspree gives you
-           (looks like https://formspree.io/f/abcdwxyz)
-        3. Replace YOUR_FORM_ID in the action attribute below with it
-        Every submission's subject is tagged "[WEB QUOTE REQUEST]" — in
-        Gmail: Settings > Filters and Blocked Addresses > Create a new
-        filter > Subject contains [WEB QUOTE REQUEST] > apply a label
-        (and optionally skip the inbox) to keep these organized separately.
+        Submissions post to Formspree (derrick@sighthoundbuilders.ca account),
+        subject-tagged "[WEB QUOTE REQUEST]" — in Gmail: Settings > Filters
+        and Blocked Addresses > Create a new filter > Subject contains
+        [WEB QUOTE REQUEST] > apply a label (and optionally skip the inbox)
+        to keep these organized separately.
       -->
       <div class="contact-form-panel" id="contactFormPanel">
       <div class="contact-form-panel-inner">
-      <form class="contact-form" id="quoteForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+      <form class="contact-form" id="quoteForm" action="https://formspree.io/f/xqpzyrbq" method="POST">
         <input type="hidden" name="_subject" id="formSubject" value="[WEB QUOTE REQUEST] New quote request">
         <input type="hidden" name="_replyto" id="formReplyTo">
         <input type="hidden" name="_cc" id="formCc">
