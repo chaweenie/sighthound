@@ -147,29 +147,46 @@ statEls.forEach((el) => statObserver.observe(el));
 // someone straight to the form (header + hero "quote" buttons).
 const contactFormToggle = document.getElementById('contactFormToggle');
 const contactFormPanel = document.getElementById('contactFormPanel');
+const CONTACT_FORM_DESKTOP_QUERY = '(min-width: 901px)';
 
-function openContactForm() {
+// Animates open/closed via a measured pixel height rather than the CSS
+// grid-template-rows 0fr/1fr trick — that trick doesn't reliably animate
+// (or open at all) in some mobile browsers, where plain height + scrollHeight
+// is well supported. Only runs below the desktop breakpoint: from
+// 901px up, the form is always visible via CSS and this is a no-op.
+function setContactFormOpen(isOpen) {
   if (!contactFormToggle || !contactFormPanel) return;
-  if (contactFormPanel.classList.contains('is-open')) return;
-  contactFormPanel.classList.add('is-open');
-  contactFormToggle.setAttribute('aria-expanded', 'true');
+  if (window.matchMedia(CONTACT_FORM_DESKTOP_QUERY).matches) return;
+
+  const alreadyOpen = contactFormToggle.getAttribute('aria-expanded') === 'true';
+  if (isOpen === alreadyOpen) return;
+  contactFormToggle.setAttribute('aria-expanded', String(isOpen));
+
+  if (isOpen) {
+    contactFormPanel.style.height = `${contactFormPanel.scrollHeight}px`;
+    contactFormPanel.addEventListener('transitionend', function onOpenEnd(e) {
+      if (e.propertyName !== 'height') return;
+      contactFormPanel.removeEventListener('transitionend', onOpenEnd);
+      contactFormPanel.style.height = 'auto';
+      contactFormPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  } else {
+    contactFormPanel.style.height = `${contactFormPanel.scrollHeight}px`;
+    requestAnimationFrame(() => {
+      contactFormPanel.style.height = '0px';
+    });
+  }
 }
 
 if (contactFormToggle && contactFormPanel) {
   contactFormToggle.addEventListener('click', () => {
-    const isOpen = contactFormPanel.classList.toggle('is-open');
-    contactFormToggle.setAttribute('aria-expanded', isOpen);
-    if (!isOpen) return;
-    contactFormPanel.addEventListener('transitionend', function scrollOnce(e) {
-      if (e.propertyName !== 'grid-template-rows') return;
-      contactFormPanel.removeEventListener('transitionend', scrollOnce);
-      contactFormPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    });
+    const isOpen = contactFormToggle.getAttribute('aria-expanded') !== 'true';
+    setContactFormOpen(isOpen);
   });
 }
 
 document.querySelectorAll('a[data-open-contact-form]').forEach((link) => {
-  link.addEventListener('click', openContactForm);
+  link.addEventListener('click', () => setContactFormOpen(true));
 });
 
 // Contact form

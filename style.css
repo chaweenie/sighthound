@@ -1558,23 +1558,39 @@ html.modal-open { overflow: hidden; }
   transform: rotate(90deg);
 }
 
-/* Height animates via the 0fr/1fr grid-row trick rather than max-height,
-   so it doesn't need a guessed cap and settles at the form's real height
-   however long the content ends up being. */
+/* Height is set to a measured pixel value by JS before animating (see
+   setContactFormOpen in script.js) rather than using max-height with a
+   guessed cap, or the grid-template-rows 0fr/1fr trick — the latter
+   doesn't reliably animate on some mobile browsers. */
 .contact-form-panel {
-  display: grid;
-  grid-template-rows: 0fr;
-  margin-top: 1.75rem;
-  transition: grid-template-rows 0.45s var(--ease);
-}
-
-.contact-form-panel.is-open {
-  grid-template-rows: 1fr;
-}
-
-.contact-form-panel-inner {
+  height: 0;
   overflow: hidden;
-  min-height: 0;
+  margin-top: 1.75rem;
+  transition: height 0.45s var(--ease);
+}
+
+/* Desktop has room for the form to just sit beside the info block instead
+   of behind a toggle — the collapse/expand behaviour above is a mobile-only
+   space-saving measure (see the matching guard in setContactFormOpen). */
+@media (min-width: 901px) {
+  .contact {
+    max-width: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .contact-form-toggle {
+    display: none;
+  }
+
+  .contact-form-panel {
+    height: auto;
+    overflow: visible;
+    margin-top: 0;
+    transition: none;
+  }
 }
 
 .contact-details li {
