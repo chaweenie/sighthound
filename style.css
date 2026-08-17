@@ -3,7 +3,7 @@
 
   --bg: #1E291B;
   --surface: #23361F;
-  --surface-alt: #23361F;
+  --surface-alt: #2E4627;
   --ink: #F0DEC5;
   --ink-soft: #D6C4A8;
   --ink-faint: rgba(240, 222, 197, 0.72);
@@ -531,7 +531,7 @@ html.is-loading { overflow: hidden; }
   background:
     radial-gradient(circle at 18% 20%, rgba(242, 144, 24, 0.18), transparent 35%),
     radial-gradient(circle at 82% 78%, rgba(97, 71, 41, 0.12), transparent 45%),
-    linear-gradient(180deg, var(--bg) 0%, var(--surface-alt) 100%);
+    linear-gradient(180deg, var(--bg) 0%, var(--bg) 100%);
   z-index: -4;
 }
 
@@ -905,7 +905,7 @@ html.is-loading { overflow: hidden; }
   overflow: hidden;
   border: 1px solid var(--line);
   cursor: pointer;
-  background: var(--surface-alt);
+  background: var(--surface);
   transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
   padding: 0;
   display: block;
