@@ -329,6 +329,15 @@
         <input type="hidden" name="referenceId" id="formReferenceId">
         <input type="hidden" name="source" value="sighthound-website">
 
+        <!-- Honeypot: real visitors never see or fill this in, but most
+             spam bots blindly fill every field. Formspree recognizes the
+             "_gotcha" field name and silently discards the submission
+             (no email sent) whenever it's non-empty. -->
+        <div class="form-honeypot" aria-hidden="true">
+          <label for="companyWebsite">Website</label>
+          <input type="text" id="companyWebsite" name="_gotcha" tabindex="-1" autocomplete="off">
+        </div>
+
         <div class="form-section">
           <p class="form-section-title">Your Details</p>
           <div class="form-row">

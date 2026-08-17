@@ -1668,6 +1668,17 @@ html.modal-open { overflow: hidden; }
   gap: 1.5rem;
 }
 
+/* Off-screen rather than display:none — some spam bots skip fields that
+   are display:none or visibility:hidden when auto-filling a form, but
+   still find and fill this one. */
+.form-honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  left: -9999px;
+}
+
 .form-section {
   display: grid;
   gap: 1.1rem;
