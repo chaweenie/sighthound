@@ -1736,6 +1736,18 @@ input:focus, select:focus, textarea:focus {
   box-shadow: 0 0 0 3px rgba(242, 144, 24, 0.18);
 }
 
+/* A <select> always gets a native dropdown arrow, but a text input with a
+   datalist (used for the location suggestions) doesn't reliably show one
+   across browsers — draw our own so it reads as clearly as the Project
+   Type <select> right below it. */
+.has-dropdown-affordance {
+  padding-right: 2.5rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23F29018' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  background-size: 12px 8px;
+}
+
 .form-checkbox {
   display: flex;
   align-items: center;
