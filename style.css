@@ -1736,16 +1736,87 @@ input:focus, select:focus, textarea:focus {
   box-shadow: 0 0 0 3px rgba(242, 144, 24, 0.18);
 }
 
-/* A <select> always gets a native dropdown arrow, but a text input with a
-   datalist (used for the location suggestions) doesn't reliably show one
-   across browsers — draw our own so it reads as clearly as the Project
-   Type <select> right below it. */
+/* A <select> always gets a native dropdown arrow; draw the same on the
+   location field so it reads as clearly as the Project Type <select>
+   right below it. */
 .has-dropdown-affordance {
   padding-right: 2.5rem;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23F29018' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.9rem center;
   background-size: 12px 8px;
+}
+
+/* Location suggestions: a custom-built list rather than a native
+   <datalist>, since a datalist's popup is rendered entirely by the
+   browser/OS with no CSS access at all — it can never be made to match
+   the rest of the form the way this can. */
+.location-combobox {
+  position: relative;
+}
+
+.location-options {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 0.4rem);
+  left: 0;
+  right: 0;
+  max-height: 260px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0.4rem;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+}
+
+.location-options[hidden] {
+  display: none;
+}
+
+.location-option {
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--radius-sm);
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  cursor: pointer;
+}
+
+.location-option:hover,
+.location-option.is-active {
+  background: var(--amber);
+  color: var(--navy-deep);
+}
+
+.location-option-fallback {
+  margin-top: 0.3rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line);
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+/* Collapsed by default (0 height, transparent) rather than hidden — the
+   padding lives on the inner div so the outer box has nothing but
+   max-height/opacity to animate, and doesn't jump when it appears. */
+.location-custom {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.35s var(--ease), opacity 0.3s var(--ease);
+}
+
+.location-custom.is-visible {
+  max-height: 100px;
+  opacity: 1;
+}
+
+.location-custom-inner {
+  display: grid;
+  gap: 0.4rem;
+  padding-top: 0.75rem;
 }
 
 .form-checkbox {

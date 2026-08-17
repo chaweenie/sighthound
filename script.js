@@ -189,6 +189,159 @@ document.querySelectorAll('a[data-open-contact-form]').forEach((link) => {
   link.addEventListener('click', () => setContactFormOpen(true));
 });
 
+// Location combobox: a free-text field with a custom-styled suggestion
+// list, rather than a <datalist> — a datalist's popup is drawn entirely by
+// the browser/OS with no CSS access at all, so it can never be made to
+// match the rest of the form. The last row is always a "not in list"
+// fallback, which fades in a separate free-text box below (see
+// showCustomLocationBox) rather than trying to repurpose the suggestion
+// field itself. Typing there mirrors into the real (name="location")
+// field, which is what's actually submitted either way.
+const LOCATION_SUGGESTIONS = [
+  'Burnaby', 'Downtown Vancouver', 'East Vancouver', 'Vancouver Westside',
+  'New Westminster', 'North Vancouver', 'West Vancouver', 'Richmond',
+  'Surrey', 'Delta', 'White Rock', 'Coquitlam', 'Port Coquitlam',
+  'Port Moody', 'Pitt Meadows', 'Maple Ridge', 'Langley',
+];
+const LOCATION_FALLBACK_LABEL = 'Not in list? Type your own above';
+
+const locationInput = document.getElementById('location');
+const locationOptionsList = document.getElementById('locationOptions');
+const locationCustom = document.getElementById('locationCustom');
+const locationCustomInput = document.getElementById('locationCustomInput');
+
+if (locationInput && locationOptionsList && locationCustom && locationCustomInput) {
+  let activeIndex = -1;
+  let visibleOptions = [];
+
+  function itemCount() {
+    return visibleOptions.length + 1; // +1 for the fallback row
+  }
+
+  function renderOptions(filter) {
+    const query = filter.trim().toLowerCase();
+    visibleOptions = query
+      ? LOCATION_SUGGESTIONS.filter((name) => name.toLowerCase().includes(query))
+      : LOCATION_SUGGESTIONS;
+
+    const suggestionItems = visibleOptions
+      .map((name, i) => `<li role="option" aria-selected="false" id="locationOption-${i}" class="location-option">${name}</li>`)
+      .join('');
+    const fallbackItem = `<li role="option" aria-selected="false" id="locationOption-fallback" class="location-option location-option-fallback">${LOCATION_FALLBACK_LABEL}</li>`;
+
+    locationOptionsList.innerHTML = suggestionItems + fallbackItem;
+    activeIndex = -1;
+  }
+
+  function openOptions() {
+    locationOptionsList.hidden = false;
+    locationInput.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeOptions() {
+    locationOptionsList.hidden = true;
+    locationInput.setAttribute('aria-expanded', 'false');
+    locationInput.removeAttribute('aria-activedescendant');
+    activeIndex = -1;
+  }
+
+  function setActive(index) {
+    const items = locationOptionsList.querySelectorAll('.location-option');
+    items.forEach((el) => {
+      el.classList.remove('is-active');
+      el.setAttribute('aria-selected', 'false');
+    });
+    if (index >= 0 && items[index]) {
+      items[index].classList.add('is-active');
+      items[index].setAttribute('aria-selected', 'true');
+      items[index].scrollIntoView({ block: 'nearest' });
+      locationInput.setAttribute('aria-activedescendant', items[index].id);
+    } else {
+      locationInput.removeAttribute('aria-activedescendant');
+    }
+    activeIndex = index;
+  }
+
+  function showCustomLocationBox() {
+    locationInput.value = '';
+    locationCustomInput.disabled = false;
+    locationCustomInput.value = '';
+    locationCustom.classList.add('is-visible');
+    locationCustomInput.focus();
+  }
+
+  function hideCustomLocationBox() {
+    locationCustom.classList.remove('is-visible');
+    locationCustomInput.disabled = true;
+  }
+
+  function selectIndex(index) {
+    if (index === visibleOptions.length) {
+      // The fallback row — open the free-text box instead of filling a value.
+      closeOptions();
+      showCustomLocationBox();
+      return;
+    }
+    hideCustomLocationBox();
+    locationInput.value = visibleOptions[index];
+    closeOptions();
+  }
+
+  locationInput.addEventListener('input', () => {
+    renderOptions(locationInput.value);
+    openOptions();
+  });
+
+  locationInput.addEventListener('focus', () => {
+    hideCustomLocationBox();
+    renderOptions(locationInput.value);
+    openOptions();
+  });
+
+  locationInput.addEventListener('keydown', (e) => {
+    if (locationOptionsList.hidden && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+      renderOptions(locationInput.value);
+      openOptions();
+      return;
+    }
+    if (locationOptionsList.hidden) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActive(Math.min(activeIndex + 1, itemCount() - 1));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActive(Math.max(activeIndex - 1, 0));
+    } else if (e.key === 'Enter') {
+      if (activeIndex >= 0) {
+        e.preventDefault();
+        selectIndex(activeIndex);
+      }
+    } else if (e.key === 'Escape') {
+      closeOptions();
+    }
+  });
+
+  // mousedown (not click) fires before the input would blur, and
+  // preventDefault on it stops that blur from happening at all — so
+  // there's no race between the list closing and the click registering.
+  locationOptionsList.addEventListener('mousedown', (e) => {
+    const item = e.target.closest('.location-option');
+    if (!item) return;
+    e.preventDefault();
+    const items = [...locationOptionsList.querySelectorAll('.location-option')];
+    selectIndex(items.indexOf(item));
+  });
+
+  locationInput.addEventListener('blur', closeOptions);
+
+  // Mirror into the real (name="location") field, since it's the one
+  // that's actually submitted — this box is just where the typing happens.
+  locationCustomInput.addEventListener('input', () => {
+    locationInput.value = locationCustomInput.value;
+  });
+}
+
 // Contact form
 const quoteForm = document.getElementById('quoteForm');
 const formStatus = document.getElementById('formStatus');

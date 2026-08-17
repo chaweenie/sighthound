@@ -353,26 +353,16 @@
           <div class="form-row form-row-split">
             <div>
               <label for="location">Location <span class="required-mark" aria-hidden="true">*</span></label>
-              <input type="text" id="location" name="location" class="has-dropdown-affordance" placeholder="City or neighbourhood" required autocomplete="off" list="locationSuggestions">
-              <datalist id="locationSuggestions">
-                <option value="Burnaby">
-                <option value="Downtown Vancouver">
-                <option value="East Vancouver">
-                <option value="Vancouver Westside">
-                <option value="New Westminster">
-                <option value="North Vancouver">
-                <option value="West Vancouver">
-                <option value="Richmond">
-                <option value="Surrey">
-                <option value="Delta">
-                <option value="White Rock">
-                <option value="Coquitlam">
-                <option value="Port Coquitlam">
-                <option value="Port Moody">
-                <option value="Pitt Meadows">
-                <option value="Maple Ridge">
-                <option value="Langley">
-              </datalist>
+              <div class="location-combobox">
+                <input type="text" id="location" name="location" class="has-dropdown-affordance" placeholder="City or neighbourhood" required autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-controls="locationOptions">
+                <ul class="location-options" id="locationOptions" role="listbox" hidden></ul>
+              </div>
+              <div class="location-custom" id="locationCustom">
+                <div class="location-custom-inner">
+                  <label for="locationCustomInput">Type your location</label>
+                  <input type="text" id="locationCustomInput" placeholder="Neighbourhood, city, or area" disabled>
+                </div>
+              </div>
             </div>
             <div>
               <label for="streetAddress">Street Address</label>
