@@ -141,6 +141,37 @@ const statObserver = new IntersectionObserver(
 
 statEls.forEach((el) => statObserver.observe(el));
 
+// Contact form: collapsed by default under the contact info so the section
+// doesn't front-load the whole form — opens on the "Request a Quote" toggle,
+// or automatically for CTAs elsewhere on the page whose whole job is to get
+// someone straight to the form (header + hero "quote" buttons).
+const contactFormToggle = document.getElementById('contactFormToggle');
+const contactFormPanel = document.getElementById('contactFormPanel');
+
+function openContactForm() {
+  if (!contactFormToggle || !contactFormPanel) return;
+  if (contactFormPanel.classList.contains('is-open')) return;
+  contactFormPanel.classList.add('is-open');
+  contactFormToggle.setAttribute('aria-expanded', 'true');
+}
+
+if (contactFormToggle && contactFormPanel) {
+  contactFormToggle.addEventListener('click', () => {
+    const isOpen = contactFormPanel.classList.toggle('is-open');
+    contactFormToggle.setAttribute('aria-expanded', isOpen);
+    if (!isOpen) return;
+    contactFormPanel.addEventListener('transitionend', function scrollOnce(e) {
+      if (e.propertyName !== 'grid-template-rows') return;
+      contactFormPanel.removeEventListener('transitionend', scrollOnce);
+      contactFormPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  });
+}
+
+document.querySelectorAll('a[data-open-contact-form]').forEach((link) => {
+  link.addEventListener('click', openContactForm);
+});
+
 // Contact form
 const quoteForm = document.getElementById('quoteForm');
 const formStatus = document.getElementById('formStatus');
@@ -393,13 +424,36 @@ function renderGallery(filter) {
   updateGalleryNavButtons();
 }
 
+// Fades the current cards out, swaps in the new filter's cards while
+// invisible, then fades those in — instead of the old cards vanishing and
+// the new ones popping in on the same frame.
+const GALLERY_FADE_MS = 220;
+let galleryFadeTimer = null;
+
+function switchGalleryFilter(filter) {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    renderGallery(filter);
+    return;
+  }
+  clearTimeout(galleryFadeTimer);
+  galleryScroll.classList.add('is-fading');
+  galleryThumbs.classList.add('is-fading');
+  galleryFadeTimer = setTimeout(() => {
+    renderGallery(filter);
+    requestAnimationFrame(() => {
+      galleryScroll.classList.remove('is-fading');
+      galleryThumbs.classList.remove('is-fading');
+    });
+  }, GALLERY_FADE_MS);
+}
+
 if (galleryFilters) {
   galleryFilters.addEventListener('click', (e) => {
     const btn = e.target.closest('.filter-btn');
-    if (!btn) return;
+    if (!btn || btn.classList.contains('active')) return;
     galleryFilters.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
     btn.classList.add('active');
-    renderGallery(btn.dataset.filter);
+    switchGalleryFilter(btn.dataset.filter);
   });
 }
 
@@ -653,6 +707,126 @@ let activeProject = null;
 let activeSlideIndex = 0;
 let lastFocusedEl = null;
 
+// Tap/click an image to zoom in on the point tapped, tap again to reset;
+// while zoomed, drag/swipe pans and a mouse wheel or two-finger pinch
+// adjusts the zoom level further. Each slide gets a fresh img element (see
+// renderModalSlide below), so zoom state naturally resets when the slide
+// or project changes — nothing to clean up here.
+const IMAGE_ZOOM_DEFAULT = 2.2;
+const IMAGE_ZOOM_MAX = 4;
+const IMAGE_ZOOM_TAP_THRESHOLD = 6; // px of movement before a tap counts as a drag
+
+function makeImageZoomable(img) {
+  const container = img.parentElement;
+  let scale = 1;
+  let tx = 0;
+  let ty = 0;
+  const pointers = new Map();
+  let pinchStartDist = 0;
+  let pinchStartScale = 1;
+  let dragStart = null;
+  let dragMoved = 0;
+
+  function clampPan() {
+    const maxX = Math.max(0, (img.offsetWidth * scale - container.clientWidth) / 2);
+    const maxY = Math.max(0, (img.offsetHeight * scale - container.clientHeight) / 2);
+    tx = Math.min(maxX, Math.max(-maxX, tx));
+    ty = Math.min(maxY, Math.max(-maxY, ty));
+  }
+
+  function render(animate) {
+    clampPan();
+    img.style.transition = animate ? 'transform 0.3s var(--ease)' : 'none';
+    img.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+    img.classList.toggle('is-zoomed', scale > 1.01);
+  }
+
+  // Zooms toward (clientX, clientY) — the point under the cursor/finger/tap
+  // stays visually still while the scale changes around it.
+  function zoomTo(newScale, clientX, clientY, animate) {
+    const rect = container.getBoundingClientRect();
+    const originX = clientX - rect.left - rect.width / 2;
+    const originY = clientY - rect.top - rect.height / 2;
+    const clamped = Math.min(IMAGE_ZOOM_MAX, Math.max(1, newScale));
+    const ratio = clamped / scale;
+    tx = originX - (originX - tx) * ratio;
+    ty = originY - (originY - ty) * ratio;
+    scale = clamped;
+    if (scale === 1) { tx = 0; ty = 0; }
+    render(animate);
+  }
+
+  function reset(animate) {
+    scale = 1;
+    tx = 0;
+    ty = 0;
+    render(animate);
+  }
+
+  function onPointerDown(e) {
+    if (e.button !== undefined && e.button !== 0) return;
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    img.setPointerCapture(e.pointerId);
+    if (pointers.size === 1) {
+      dragStart = { x: e.clientX, y: e.clientY, tx, ty };
+      dragMoved = 0;
+    } else if (pointers.size === 2) {
+      const pts = [...pointers.values()];
+      pinchStartDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y) || 1;
+      pinchStartScale = scale;
+    }
+  }
+
+  function onPointerMove(e) {
+    if (!pointers.has(e.pointerId)) return;
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+    if (pointers.size === 2) {
+      const pts = [...pointers.values()];
+      const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+      const mid = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 };
+      zoomTo(pinchStartScale * (dist / pinchStartDist), mid.x, mid.y, false);
+    } else if (pointers.size === 1 && scale > 1 && dragStart) {
+      const dx = e.clientX - dragStart.x;
+      const dy = e.clientY - dragStart.y;
+      dragMoved = Math.max(dragMoved, Math.hypot(dx, dy));
+      tx = dragStart.tx + dx;
+      ty = dragStart.ty + dy;
+      render(false);
+    }
+  }
+
+  function onPointerUp(e) {
+    const wasSingle = pointers.size === 1;
+    pointers.delete(e.pointerId);
+    if (wasSingle && pointers.size === 0 && dragMoved < IMAGE_ZOOM_TAP_THRESHOLD) {
+      if (scale > 1.01) {
+        reset(true);
+      } else {
+        zoomTo(IMAGE_ZOOM_DEFAULT, e.clientX, e.clientY, true);
+      }
+    }
+    if (pointers.size === 1) {
+      // One finger of a pinch just lifted — resume panning with the
+      // remaining finger from here instead of waiting for a fresh press.
+      const [remaining] = pointers.values();
+      dragStart = { x: remaining.x, y: remaining.y, tx, ty };
+      dragMoved = 0;
+    } else {
+      dragStart = null;
+    }
+  }
+
+  img.addEventListener('pointerdown', onPointerDown);
+  img.addEventListener('pointermove', onPointerMove);
+  img.addEventListener('pointerup', onPointerUp);
+  img.addEventListener('pointercancel', onPointerUp);
+  img.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    zoomTo(scale * (1 - e.deltaY * 0.0025), e.clientX, e.clientY, false);
+  }, { passive: false });
+}
+
 function renderModalSlide() {
   const slides = getSlides(activeProject);
   const slide = slides[activeSlideIndex];
@@ -673,6 +847,8 @@ function renderModalSlide() {
   } else {
     projectModalSlide.innerHTML = `<img class="project-modal-image" src="${imagePath(activeProject, slide.src)}" alt="Project photo">`;
   }
+
+  projectModalSlide.querySelectorAll('img').forEach(makeImageZoomable);
 
   const hasMultiple = slides.length > 1;
   carouselPrev.hidden = !hasMultiple;

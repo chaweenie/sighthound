@@ -870,6 +870,13 @@ html.is-loading { overflow: hidden; }
   user-select: none;
   margin: 0 -1px; /* room for card focus rings without clipping */
   padding: 1px;
+  transition: opacity 0.22s var(--ease), transform 0.22s var(--ease);
+}
+
+.gallery-scroll.is-fading,
+.gallery-thumbs.is-fading {
+  opacity: 0;
+  transform: translateY(6px);
 }
 
 .gallery-scroll::-webkit-scrollbar { display: none; }
@@ -1105,6 +1112,20 @@ html.modal-open { overflow: hidden; }
   background: var(--navy-deep);
 }
 
+/* Tap/click to zoom, drag to pan, wheel or pinch to adjust further —
+   touch-action: none hands the gesture fully to our own pointer handling
+   instead of letting the browser scroll or double-tap-zoom the page. */
+.project-modal-image,
+.before-after-slide img {
+  cursor: zoom-in;
+  touch-action: none;
+}
+
+.project-modal-image.is-zoomed,
+.before-after-slide img.is-zoomed {
+  cursor: grab;
+}
+
 .before-after-slide {
   display: flex;
   width: 100%;
@@ -1142,6 +1163,7 @@ html.modal-open { overflow: hidden; }
   letter-spacing: 0.05em;
   padding: 0.25rem 0.6rem;
   border-radius: 999px;
+  pointer-events: none;
 }
 
 .carousel-arrow {
@@ -1307,17 +1329,13 @@ html.modal-open { overflow: hidden; }
 
   .services-grid,
   .gallery-track,
-  .about,
-  .contact {
+  .about {
     gap: 1rem;
   }
 
   .about {
     grid-template-columns: 1fr;
-  }
-
-  .contact {
-    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 
   .form-row-split {
@@ -1543,10 +1561,40 @@ html.modal-open { overflow: hidden; }
 
 /* ---------- Contact ---------- */
 .contact {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.contact-form-toggle {
+  margin-top: 1.75rem;
+}
+
+.contact-form-toggle-icon {
+  display: inline-block;
+  transition: transform 0.3s var(--ease);
+}
+
+.contact-form-toggle[aria-expanded="true"] .contact-form-toggle-icon {
+  transform: rotate(90deg);
+}
+
+/* Height animates via the 0fr/1fr grid-row trick rather than max-height,
+   so it doesn't need a guessed cap and settles at the form's real height
+   however long the content ends up being. */
+.contact-form-panel {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  align-items: center;
+  grid-template-rows: 0fr;
+  margin-top: 1.75rem;
+  transition: grid-template-rows 0.45s var(--ease);
+}
+
+.contact-form-panel.is-open {
+  grid-template-rows: 1fr;
+}
+
+.contact-form-panel-inner {
+  overflow: hidden;
+  min-height: 0;
 }
 
 .contact-details li {
@@ -1805,7 +1853,15 @@ input:focus, select:focus, textarea:focus {
   .about-copy p { order: 3; }
   .about-copy .about-list { order: 4; }
 
-  .contact { grid-template-columns: 1fr; }
+  /* Each of these already gets the grid's 1rem row gap now that they're
+     flattened into .about directly (display: contents above) — their own
+     margins would stack on top of that gap, doubling up unevenly between
+     some elements (eyebrow/heading, the two paragraphs) but not others. */
+  .about-copy .eyebrow { margin-bottom: 0; }
+  .about-copy h2 { margin-bottom: 0; }
+  .about-copy p { margin-bottom: 0; }
+  .about-copy .about-list { margin-top: 0; }
+
   .trust-bar { grid-template-columns: repeat(3, 1fr); }
 }
 
@@ -1869,6 +1925,7 @@ input:focus, select:focus, textarea:focus {
     overflow-x: auto;
     margin-top: 1rem;
     padding: 0.25rem;
+    transition: opacity 0.22s var(--ease), transform 0.22s var(--ease);
   }
 
   .gallery-thumb {
