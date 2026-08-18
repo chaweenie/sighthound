@@ -1738,9 +1738,14 @@ input:focus, select:focus, textarea:focus {
 
 /* A <select> always gets a native dropdown arrow; draw the same on the
    location field so it reads as clearly as the Project Type <select>
-   right below it. */
+   right below it. readonly blocks typing (selection only, like a real
+   <select> — free text only happens in the "not in list" box below), so
+   the cursor and hidden caret signal "click to choose" rather than "type
+   here". */
 .has-dropdown-affordance {
   padding-right: 2.5rem;
+  cursor: pointer;
+  caret-color: transparent;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23F29018' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.9rem center;

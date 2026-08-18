@@ -218,11 +218,11 @@ if (locationInput && locationOptionsList && locationCustom && locationCustomInpu
     return visibleOptions.length + 1; // +1 for the fallback row
   }
 
-  function renderOptions(filter) {
-    const query = filter.trim().toLowerCase();
-    visibleOptions = query
-      ? LOCATION_SUGGESTIONS.filter((name) => name.toLowerCase().includes(query))
-      : LOCATION_SUGGESTIONS;
+  function renderOptions() {
+    // The field is read-only (selection only, like Project Type's <select>
+    // — typing only ever happens in the "not in list" box below), so there's
+    // no typed text to filter by: the full list renders every time.
+    visibleOptions = LOCATION_SUGGESTIONS;
 
     const suggestionItems = visibleOptions
       .map((name, i) => `<li role="option" aria-selected="false" id="locationOption-${i}" class="location-option">${name}</li>`)
@@ -287,20 +287,22 @@ if (locationInput && locationOptionsList && locationCustom && locationCustomInpu
     closeOptions();
   }
 
-  locationInput.addEventListener('input', () => {
-    renderOptions(locationInput.value);
-    openOptions();
-  });
-
-  locationInput.addEventListener('focus', () => {
+  // Both focus (tabbing in, or the first click) and click (every click,
+  // including while already focused — a plain focus listener wouldn't fire
+  // again there) open/reopen it, matching how a <select> reopens on every
+  // click regardless of prior focus state.
+  function openFreshOptions() {
     hideCustomLocationBox();
-    renderOptions(locationInput.value);
+    renderOptions();
     openOptions();
-  });
+  }
+
+  locationInput.addEventListener('focus', openFreshOptions);
+  locationInput.addEventListener('click', openFreshOptions);
 
   locationInput.addEventListener('keydown', (e) => {
     if (locationOptionsList.hidden && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
-      renderOptions(locationInput.value);
+      renderOptions();
       openOptions();
       return;
     }
