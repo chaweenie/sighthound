@@ -1840,7 +1840,11 @@ input:focus, select:focus, textarea:focus {
   color: var(--ink-faint);
 }
 
+/* Capped width so the day grid stays a compact calendar instead of
+   stretching across the whole form on wide screens. */
 .date-picker {
+  width: 100%;
+  max-width: 340px;
   border: 1.5px solid var(--line);
   border-radius: var(--radius-sm);
   padding: 0.75rem;
@@ -1901,8 +1905,9 @@ input:focus, select:focus, textarea:focus {
 }
 
 .date-picker-day {
-  aspect-ratio: 1;
+  height: 2.25rem;
   min-width: 0;
+  padding: 0;
   border: 1.5px solid transparent;
   border-radius: var(--radius-sm);
   background: transparent;
