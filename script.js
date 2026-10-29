@@ -348,10 +348,120 @@ if (locationInput && locationOptionsList && locationCustom && locationCustomInpu
 const quoteForm = document.getElementById('quoteForm');
 const formStatus = document.getElementById('formStatus');
 
-// Ideal start/finish date pickers: don't allow picking a date in the past.
-const todayISO = new Date().toISOString().split('T')[0];
-document.getElementById('startDate').min = todayISO;
-document.getElementById('finishDate').min = todayISO;
+// Ideal work dates: an inline month calendar where each day toggles on/off,
+// rather than <input type="date"> — the native picker only ever holds a
+// single date and its popup can't be styled. Days are keyed as local
+// YYYY-MM-DD strings (not toISOString, which is UTC and can shift the day
+// near midnight). The readable, sorted list goes into the hidden
+// name="workDates" field, which is what's actually submitted.
+const workDatesGrid = document.getElementById('workDatesGrid');
+const workDatesMonth = document.getElementById('workDatesMonth');
+const workDatesPrev = document.getElementById('workDatesPrev');
+const workDatesNext = document.getElementById('workDatesNext');
+const workDatesSummary = document.getElementById('workDatesSummary');
+const workDatesChips = document.getElementById('workDatesChips');
+const workDatesClear = document.getElementById('workDatesClear');
+const workDatesInput = document.getElementById('workDates');
+const workDatesPicker = document.getElementById('workDatesPicker');
+
+const selectedWorkDates = new Set();
+
+function dateKey(date) {
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${date.getFullYear()}-${m}-${d}`;
+}
+
+function keyToDate(key) {
+  const [y, m, d] = key.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+const todayKey = dateKey(today);
+let shownMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+function renderWorkDatesCalendar() {
+  workDatesMonth.textContent = shownMonth.toLocaleDateString('en-CA', { month: 'long', year: 'numeric' });
+  // No going back past the current month — every earlier day is in the past.
+  workDatesPrev.disabled = shownMonth.getFullYear() === today.getFullYear() && shownMonth.getMonth() === today.getMonth();
+
+  const year = shownMonth.getFullYear();
+  const month = shownMonth.getMonth();
+  const leadingBlanks = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  let html = '<span class="date-picker-blank"></span>'.repeat(leadingBlanks);
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(year, month, day);
+    const key = dateKey(date);
+    const isPast = date < today;
+    const isSelected = selectedWorkDates.has(key);
+    const classes = ['date-picker-day'];
+    if (isSelected) classes.push('is-selected');
+    if (key === todayKey) classes.push('is-today');
+    const label = date.toLocaleDateString('en-CA', { weekday: 'long', month: 'long', day: 'numeric' });
+    html += `<button type="button" class="${classes.join(' ')}" data-date="${key}" aria-pressed="${isSelected}" aria-label="${label}"${isPast ? ' disabled' : ''}>${day}</button>`;
+  }
+  workDatesGrid.innerHTML = html;
+}
+
+function formatWorkDate(key, options) {
+  return keyToDate(key).toLocaleDateString('en-CA', options);
+}
+
+function updateWorkDatesSummary() {
+  const sorted = [...selectedWorkDates].sort();
+  workDatesSummary.hidden = sorted.length === 0;
+  workDatesChips.innerHTML = sorted
+    .map((key) => `<li><button type="button" class="date-chip" data-date="${key}" aria-label="Remove ${formatWorkDate(key, { weekday: 'long', month: 'long', day: 'numeric' })}">${formatWorkDate(key, { weekday: 'short', month: 'short', day: 'numeric' })} <span aria-hidden="true">&times;</span></button></li>`)
+    .join('');
+  workDatesInput.value = sorted
+    .map((key) => formatWorkDate(key, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }))
+    .join('; ');
+  if (sorted.length) workDatesPicker.classList.remove('is-invalid');
+}
+
+function toggleWorkDate(key) {
+  if (selectedWorkDates.has(key)) selectedWorkDates.delete(key);
+  else selectedWorkDates.add(key);
+  renderWorkDatesCalendar();
+  updateWorkDatesSummary();
+}
+
+function clearWorkDates() {
+  selectedWorkDates.clear();
+  renderWorkDatesCalendar();
+  updateWorkDatesSummary();
+}
+
+workDatesGrid.addEventListener('click', (e) => {
+  const day = e.target.closest('.date-picker-day');
+  if (!day || day.disabled) return;
+  toggleWorkDate(day.dataset.date);
+  // Re-rendering replaces the buttons, so put focus back on the same day.
+  workDatesGrid.querySelector(`[data-date="${day.dataset.date}"]`).focus();
+});
+
+workDatesChips.addEventListener('click', (e) => {
+  const chip = e.target.closest('.date-chip');
+  if (chip) toggleWorkDate(chip.dataset.date);
+});
+
+workDatesPrev.addEventListener('click', () => {
+  shownMonth = new Date(shownMonth.getFullYear(), shownMonth.getMonth() - 1, 1);
+  renderWorkDatesCalendar();
+});
+
+workDatesNext.addEventListener('click', () => {
+  shownMonth = new Date(shownMonth.getFullYear(), shownMonth.getMonth() + 1, 1);
+  renderWorkDatesCalendar();
+});
+
+workDatesClear.addEventListener('click', clearWorkDates);
+
+renderWorkDatesCalendar();
 
 function setFormStatus(message, kind) {
   formStatus.textContent = message;
@@ -361,13 +471,27 @@ function setFormStatus(message, kind) {
 quoteForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
+  // A hidden input can't use the browser's own `required` check, so the
+  // "at least one work date" rule is enforced here instead.
+  if (selectedWorkDates.size === 0) {
+    workDatesPicker.classList.add('is-invalid');
+    workDatesPicker.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setFormStatus('Please pick at least one day that works for you.', 'error');
+    return;
+  }
+
   const emailValue = document.getElementById('email').value;
   document.getElementById('formReplyTo').value = emailValue;
   document.getElementById('formCc').value = document.getElementById('sendCopy').checked ? emailValue : '';
 
   const referenceId = `SHB-${Date.now().toString(36).toUpperCase()}`;
   document.getElementById('formReferenceId').value = referenceId;
-  document.getElementById('formSubject').value = `[WEB QUOTE REQUEST] ${document.getElementById('name').value} — ${referenceId}`;
+  // Submissions from a local copy of the site (testing) still go through
+  // Formspree to the real inbox, so tag them to tell them apart from
+  // genuine requests.
+  const isLocalTest = ['localhost', '127.0.0.1', ''].includes(window.location.hostname);
+  const subjectPrefix = isLocalTest ? '[QUOTE TEST] [WEB QUOTE REQUEST]' : '[WEB QUOTE REQUEST]';
+  document.getElementById('formSubject').value = `${subjectPrefix} ${document.getElementById('name').value} — ${referenceId}`;
 
   const submitBtn = quoteForm.querySelector('.form-submit');
   submitBtn.disabled = true;
@@ -381,6 +505,7 @@ quoteForm.addEventListener('submit', (e) => {
     .then((response) => {
       if (response.ok) {
         quoteForm.reset();
+        clearWorkDates();
         setFormStatus('Thanks — your request has been sent. We’ll be in touch soon.', 'success');
       } else {
         setFormStatus('Something went wrong sending your request — please call or email us directly.', 'error');

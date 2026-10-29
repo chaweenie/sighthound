@@ -382,15 +382,25 @@
               <option>Other</option>
             </select>
           </div>
-          <div class="form-row form-row-split">
-            <div>
-              <label for="startDate">Ideal Start Date <span class="required-mark" aria-hidden="true">*</span></label>
-              <input type="date" id="startDate" name="startDate" required>
+          <div class="form-row">
+            <span class="form-label" id="workDatesLabel">Ideal Work Dates <span class="required-mark" aria-hidden="true">*</span></span>
+            <p class="form-hint" id="workDatesHint">Tap each day that works for you — tap again to remove it.</p>
+            <div class="date-picker" id="workDatesPicker" role="group" aria-labelledby="workDatesLabel" aria-describedby="workDatesHint">
+              <div class="date-picker-header">
+                <button type="button" class="date-picker-nav" id="workDatesPrev" aria-label="Previous month">&#8249;</button>
+                <span class="date-picker-month" id="workDatesMonth" aria-live="polite"></span>
+                <button type="button" class="date-picker-nav" id="workDatesNext" aria-label="Next month">&#8250;</button>
+              </div>
+              <div class="date-picker-weekdays" aria-hidden="true">
+                <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+              </div>
+              <div class="date-picker-grid" id="workDatesGrid"></div>
             </div>
-            <div>
-              <label for="finishDate">Ideal Finish Date</label>
-              <input type="date" id="finishDate" name="finishDate">
+            <div class="date-picker-summary" id="workDatesSummary" hidden>
+              <ul class="date-chips" id="workDatesChips"></ul>
+              <button type="button" class="date-picker-clear" id="workDatesClear">Clear all</button>
             </div>
+            <input type="hidden" name="workDates" id="workDates">
           </div>
           <div class="form-row">
             <label for="message">Tell us about your project <span class="required-mark" aria-hidden="true">*</span></label>

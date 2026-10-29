@@ -1826,6 +1826,160 @@ input:focus, select:focus, textarea:focus {
   padding-top: 0.75rem;
 }
 
+/* Ideal work dates: a span rather than a <label>, since it names a group
+   of day buttons rather than a single control — same look as the labels. */
+.form-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.form-hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+}
+
+.date-picker {
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem;
+  transition: border-color 0.25s var(--ease);
+}
+
+.date-picker.is-invalid {
+  border-color: #e88a8a;
+}
+
+.date-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.date-picker-month {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.date-picker-nav {
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--amber);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s var(--ease);
+}
+
+.date-picker-nav:hover:not(:disabled) {
+  background: rgba(242, 144, 24, 0.15);
+}
+
+.date-picker-nav:disabled {
+  color: var(--line);
+  cursor: default;
+}
+
+.date-picker-weekdays,
+.date-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.2rem;
+  text-align: center;
+}
+
+.date-picker-weekdays {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ink-faint);
+  margin-bottom: 0.25rem;
+}
+
+.date-picker-day {
+  aspect-ratio: 1;
+  min-width: 0;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s var(--ease), color 0.15s var(--ease);
+}
+
+.date-picker-day:hover:not(:disabled) {
+  background: rgba(242, 144, 24, 0.15);
+}
+
+.date-picker-day:focus-visible {
+  outline: none;
+  border-color: var(--amber);
+}
+
+.date-picker-day.is-today {
+  border-color: var(--line);
+}
+
+.date-picker-day.is-selected {
+  background: var(--amber);
+  color: var(--navy-deep);
+  font-weight: 700;
+}
+
+.date-picker-day:disabled {
+  color: rgba(240, 222, 197, 0.25);
+  cursor: default;
+}
+
+.date-picker-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.3rem;
+}
+
+.date-picker-summary[hidden] {
+  display: none;
+}
+
+.date-chips {
+  display: contents;
+  list-style: none;
+}
+
+.date-chip {
+  border: 1px solid rgba(242, 144, 24, 0.45);
+  border-radius: 999px;
+  background: rgba(242, 144, 24, 0.12);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.78rem;
+  padding: 0.25rem 0.65rem;
+  cursor: pointer;
+}
+
+.date-chip:hover {
+  background: rgba(242, 144, 24, 0.25);
+}
+
+.date-picker-clear {
+  border: none;
+  background: none;
+  color: var(--ink-faint);
+  font: inherit;
+  font-size: 0.78rem;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
 .form-checkbox {
   display: flex;
   align-items: center;
